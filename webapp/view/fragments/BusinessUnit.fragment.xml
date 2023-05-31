@@ -1,0 +1,6 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<SelectDialog title="Authority" class="sapUiPopupWithPadding" items="{Litigationrep>/xBRIxi_compliance}" search="_handleValueHelpSearch3"
+		confirm="_handleValueHelpClose3" cancel="_handleValueHelpClos3">
+		<StandardListItem iconDensityAware="false" iconInset="false" title="{Litigationrep>business_unit}"/>
+	</SelectDialog>
+</core:FragmentDefinition>

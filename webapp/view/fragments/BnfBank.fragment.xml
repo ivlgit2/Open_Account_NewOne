@@ -1,0 +1,7 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<SelectDialog title="Beneficiary Bank" class="sapUiPopupWithPadding" items="{Vendor_Model>/bank_details}" liveChange="_handleValueHelpSearchBnfBank"
+		confirm="_handleValueHelpCloseBnfBank" cancel="_handleValueHelpCloseBnfBank">
+		<StandardListItem iconDensityAware="false" iconInset="false" title="{Vendor_Model>banks}" description="{Vendor_Model>bankl}" info ="{Vendor_Model>swift}"/>
+	</SelectDialog>
+</core:FragmentDefinition>
+

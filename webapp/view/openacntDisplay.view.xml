@@ -1,0 +1,323 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="bri.open_account.controller.openacntDisplay"
+	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:l="sap.ui.layout" xmlns:f="sap.ui.layout.form" displayBlock="true" xmlns:t="sap.ui.table">
+	<App>
+		<pages>
+			<Page title="{i18n>Open Account}" showNavButton="true" id="ContChange" navButtonPress="onPressGoBack">
+				<headerContent>
+					<Switch state="false" customTextOn="disp" customTextOff="Edit" change="OnChangeSwitch" id="idSwtichMode" visible="true">
+
+					
+						<layoutData>
+							<FlexItemData growFactor="1"/>
+						</layoutData>
+					</Switch>
+				</headerContent>
+				<content>
+					<IconTabBar id="idIconTabBar" select="handleIconTabBarSelect" class="sapUiResponsiveContentPadding" visible="true">
+						<items>
+							<IconTabFilter icon="sap-icon://contacts" text="Header">
+								<f:SimpleForm id="Simple3Fo1rmDisplay355" title="Header Details" editable="true" layout="ResponsiveGridLayout" labelSpanXL="6"
+									labelSpanL="6" labelSpanM="6" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0"
+									columnsXL="3" columnsL="3" columnsM="3" singleContainerFullSize="false" visible="true">
+									<f:content>
+										<core:Title/>
+										<Label/>
+										<Label text="Company Code" id="CompnyCode"/>
+										<!--<Input value="" enabled="false" id="comp" width="223px" liveChange="intcheck"/>-->
+										<Input id="consigncod" enabled="false" type="Text" valueHelpOnly="true" value="{Lists>/consigncod}" showSuggestion="true"
+											showValueHelp="true" valueHelpRequest="handleValueHelpCompany" suggestionItems="{Vendor_Model>/company_code}"
+											suggestionItemSelected="suggestionItemSelected">
+											<suggestionItems>
+												<core:ListItem key="{Vendor_Model>bukrs}" text="{Vendor_Model>bukrs}" additionalText="{Vendor_Model>bukrs}"/>
+											</suggestionItems>
+										</Input>
+										<Label text=""/>
+										<Text text="{nndoHeaderDetail>/compdes}" id="compdes"></Text>
+										<Label text="Vendor"/>
+										<!--<Input value="" enabled="false" id="vendor" width="223px" liveChange="intcheck"/>-->
+										<Input id="lifnr" type="Text" textFormatMode="Key" showSuggestion="true" value="{Lists>/lifnr}" showValueHelp="true"
+											valueHelpRequest="handleValueHelpVendor" suggestionItemSelected="suggestionItemSelected" enabled="false" valueLiveUpdate="true"></Input>
+											<Label text=""/>
+										<Text text="{nndoHeaderDetail>/vendordes}" id="vendordes"></Text>
+										<Label text="Bank Reference Number"/>
+										<Input value="{Lists>/bnkrefno}" enabled="{State>/enable}" id="bnkrefno" liveChange="Numbercheck1" maxLength="30"/>
+										<Label text="Original Doc Refdate"/>
+										<DatePicker id="og_docdt" value=" {path: 'Lists>/og_docdt',formatter:'LICE.Formatter.convertToSAPdate'}" dateValue="{/date}"
+											valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="ChangeSchmeIssue" enabled="{State>/enable}"/>
+										<Label text="Payment Date"/>
+										<DatePicker id="pay_date" enabled="{State>/enable}" value=" {path: 'Lists>/pay_date',formatter:'LICE.Formatter.convertToSAPdate'}"
+											dateValue="{/date}" valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="ChangeSchmeIssue"/>
+										<Label text="Due Date"/>
+										<DatePicker id="due_date" enabled="{State>/enable}" value=" {path: 'Lists>/due_date'}" dateValue="{/date}" valueFormat="yyyy-MM-ddT00:00:00"
+											displayFormat="dd/MM/yyyy" change="ChangeSchmeIssue"/>
+										<Label text="Importer Bank"/>
+										<Input id="imp_bank" enabled="{State>/enable}" value="{Lists>/imp_bank}" type="Text" textFormatMode="Key" showSuggestion="true"
+											showValueHelp="true" valueHelpRequest="handleValueHelpImpBank" suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true"></Input>
+										<core:Title/>
+										<Label text="Beneficiary Bank"/>
+										<Input id="banka" type="Text" enabled="{State>/enable}" textFormatMode="Key" showSuggestion="true" showValueHelp="true"
+											valueHelpRequest="handleValueHelpBnfBank" value="{Lists>/banka}" suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true"></Input>
+										<Label text="Account.No"/>
+										<Input value="{Lists>/accno}" enabled="{State>/enable}" id="accno"  liveChange="Numbercheck2" maxLength="25"/>
+										<Label text="Beneficiary Acc.No"/>
+										<Input value="{Lists>/bankn}" enabled="{State>/enable}" id="bankn"  liveChange="Numbercheck3" maxLength="18"/>
+										<Label text="Bank Excange Rate"/>
+										<Input value="{Lists>/bank_exc_rate}" id="bank_exc_rate" enabled="{State>/enable}"  liveChange="DecCheck" maxLength="12" />
+										<Label text="Total Amount"/>
+										<Input value="{Lists>/totinvval}" id="totinvval" enabled="false" width="300px" liveChange="intcheck"/>
+										<!--<Label text=""/>-->
+										<Input id="totinvval_curr" value="{Lists>/totinvval_curr}" type="Text" enabled="false" ></Input>
+										<Label text="Amount Paid"/>
+										<Input value="{Lists>/totamtpaid}" id="totamtpaid" enabled="false" width="300px" liveChange="intcheck"/>
+										<!--<Label text=""/>-->
+										<Input value="{Lists>/totamtpaid_curr}" id="totamtpaid_curr" type="Text" enabled="false" ></Input>
+										<Label text="Balace Amount"/>
+										<Input value="{Lists>/balance}" id="balance" enabled="false" width="300px" liveChange="intcheck"/>
+										<!--<Label text=""/>-->
+										<Input value="{Lists>/totamtpaid_curr}" id="tcurr2" type="Text" enabled="false" ></Input>
+										<core:Title/>
+										<Label text="Payment Status"/>
+										<!-- <ComboBox id="paymntstt" enabled="{State>/enable}" placeholder="Payment Status" selectionChange="FnUpdateClassify">
+											<items>
+												<core:Item key="CO" text="Fully Paid"/>
+												<core:Item key="PO" text="Partially Paid"/>
+											</items>
+										</ComboBox> -->
+										<Input value="" id="paymntstt" enabled="false" />
+										<Label text="AD Code"/>
+										<Input value="{Lists>/ad_code}" id="ad_code" enabled="{State>/enable}" liveChange="Numbercheck4" maxLength="20"/>
+										<Label text="Swift Code"/>
+										<Input value="{Lists>/swift}" id="swift" enabled="false" />
+										<Label text="Incotrem"/>
+										<!--<Input value="{Lists>/vendor}" id="incotrm"  enabled="{State>/enable}" width="223px"/>-->
+										<Input id="inco1" type="Text" enabled="{State>/enable}" textFormatMode="Key" showSuggestion="true" showValueHelp="true"
+											valueHelpRequest="handleValueHelpincotrm" value="{Lists>/inco1}" suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true"></Input>
+										<Label text="Payment Terms"/>
+										<!--<Input value="{Lists>/vendor}" id="paymnterms"  enabled="{State>/enable}" width="223px"/>-->
+										<Input id="zterm" type="Text" value="{Lists>/zterm}" enabled="{State>/enable}" textFormatMode="Key" showSuggestion="true"
+											showValueHelp="true" valueHelpRequest="handleValueHelpPaymnttrm" suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true"></Input>
+										<Label text="Purchase Org"/>
+										<Input value="{Lists>/ekorg}" id="ekorg" liveChange="Numbercheck5" maxLength="4" enabled="{State>/enable}" />
+										<Label text="PO Type"/>
+										<Input value="{Lists>/bsart}" id="bsart" liveChange="Numbercheck6" maxLength="4" enabled="{State>/enable}" />
+									</f:content>
+								</f:SimpleForm>
+							</IconTabFilter>
+						</items>
+					</IconTabBar>
+					<IconTabBar id="idIconTabBa1r" select="handleIconTabBarSelect" class="sapUiResponsiveContentPadding" visible="true">
+						<items>
+							<IconTabFilter icon="sap-icon://contacts" text="Item Details">
+								<t:Table id="idItemTtable" selectionMode="MultiToggle" rowSelectionChange="OnSelectChange" enableSelectAll="true" cellClick="check"
+									rows="{list1>/results}" fixedColumnCount="0" rowActionCount="1">
+									<t:toolbar>
+										<Toolbar id="IdItemButtons">
+											<content>
+												<ToolbarSpacer/>
+												<Button icon="sap-icon://add" text="Add Row" visible="false" press="addItemRow" id="addItemBtns"/>
+											</content>
+										</Toolbar>
+									</t:toolbar>
+									<t:columns>
+										<t:Column id="idsl11" width="10em" tooltip="">
+											<Label text="Document Category"/>
+											<t:template>
+												<Text text="{list1>doccat}" id="doccat" enabled="false" wrapping="false"/>
+											</t:template>
+										</t:Column>
+										<t:Column id="idsl1" width="10em" tooltip="">
+											<Label text="Document Number"/>
+											<t:template>
+												<Text text="{list1>docnr}" id="docnr" enabled="false" wrapping="false"/>
+											</t:template>
+										</t:Column>
+										<t:Column id="idsl" width="10em" tooltip="">
+											<Label text="Invoice Number"/>
+											<t:template>
+												<Text text="{list1>invoicenr}" id="invoicenr" enabled="false" wrapping="false"/>
+											</t:template>
+										</t:Column>
+										<t:Column id="idcnno" width="10em" tooltip="">
+											<Label text="Invoice Date"/>
+											<t:template>
+												<Text text="{ path: 'list1>invoicedt', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy' } }" id="invoicedt"
+													enabled="false"/>
+												<!--<DatePicker enabled="{State>/enable}" value="{ path: 'list1>/invoicedt',formatter: 'Container.Formatter.convertToSAPdate' }"-->
+												<!--	id="invoicedt" valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" editable="false"/>-->
+											</t:template>
+										</t:Column>
+										<t:Column width="10em">
+											<Label text="Invoice Amount"/>
+											<t:template>
+												<Text text="{list1>invoiceval}" enabled="false" wrapping="false"/>
+											</t:template>
+										</t:Column>
+										<t:Column id="idmatdeslumn" tooltip="" width="10em">
+											<Label text="Invoice Currency"/>
+											<t:template>
+												<Text text="{list1>invoicecur}" enabled="false" wrapping="false"/>
+											</t:template>
+										</t:Column>
+										<t:Column id="idmatdes" tooltip="" width="10em">
+											<Label text="OpenAccount Amount"/>
+											<t:template>
+												<Text text="{list1>openacc_value}" enabled="false" wrapping="false"/>
+											</t:template>
+										</t:Column>
+										<t:Column id="idmatde" tooltip="" width="10em">
+											<Label text="OpenAccount Currency"/>
+											<t:template>
+												<Text text="{list1>openacc_curr}" enabled="false" wrapping="false"/>
+											</t:template>
+										</t:Column>
+										<t:Column id="idmeslumn" tooltip="" width="10em">
+											<Label text="Amount Payable"/>
+											<t:template> 						
+												<Input value="{list1>amount_payable}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" id="amount_payable" type="Number"
+													liveChange="calculateAmount"/>						
+											</t:template>
+										</t:Column>
+										<t:Column id="bln" tooltip="" width="10em">
+									<Label text="BL/Consignment No/HaWb No"/>
+									<t:template>
+										<Input value="{list1>bl_no}" id="bl_no"  maxLength="35" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+									</t:template>
+								</t:Column>
+								<t:Column id="date1" tooltip="" width="10em">
+									<Label text="Date"/>
+									<t:template>
+										<DatePicker id="po_date" value=" {path: 'list1>po_date'}"
+											valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="OnchangeDatepo" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+									</t:template>
+								</t:Column>
+								<t:Column id="at1" tooltip="" width="10em">
+									<Label text="ATA"/>
+									<t:template>
+										<DatePicker id="ata" value=" {path: 'list1>ata'}"
+											 valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="OnchangeDateata" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+									</t:template>
+								</t:Column>
+								<t:Column id="ad11" tooltip="" width="10em">
+									<Label text="ATD"/>
+									<t:template>
+										<DatePicker id="atd" value=" {path: 'list1>atd'}"
+											 valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="OnchangeDateatd" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+									</t:template>
+								</t:Column>
+								<t:Column id="a" tooltip="" width="10em">
+									<Label text="Country of Origin"/>
+									<t:template>
+										<Input value="{list1>orgcntry}" id="orgcntry"  maxLength="3" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+									</t:template>
+								</t:Column>
+								<t:Column id="ad1" tooltip="" width="10em">
+									<Label text="Country Description"/>
+									<t:template>
+										<Input value="{list1>landx}" id="landx"  maxLength="15"  editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+									</t:template>
+								</t:Column>
+										<t:Column id="iamn4" tooltip=" " width="10em">
+											<Label text="Port of Loading"/>
+											<t:template>
+												<Input id="pol" tooltip="" value="{list1>pol}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" maxLength="6"/>
+											</t:template>
+										</t:Column>
+										<t:Column id="iamn5" tooltip=" " width="10em">
+											<Label text="Port of Loading Description"/>
+											<t:template>
+
+												<Input id="pol_desc" tooltip="" value="{list1>pol_desc}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" maxLength="35"/>
+											</t:template>
+										</t:Column>
+										<t:Column id="iamn6" tooltip=" " width="10em">
+											<Label text="Port of Discharge"/>
+											<t:template>
+												<Input id="pod" tooltip="" value="{list1>pod}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" maxLength="6"/>
+											</t:template>
+										</t:Column>
+										<t:Column id="iamn7" tooltip=" " width="10em">
+									<Label text="Port of Discharge Description"/>
+								<t:template>
+										<Input id="pod_desc" tooltip="" value="{list1>pod_desc}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" maxLength="35"/>
+								</t:template>
+								</t:Column>
+										<t:Column id="iamn8" tooltip=" " width="10em">
+											<Label text="Plant"/>
+											<t:template>
+												<Input id="plant" tooltip="" value="{list1>plant}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" maxLength="4"/>
+											</t:template>
+										</t:Column>
+										<t:Column id="iamng" tooltip=" " width="10em">
+											<Label text="Custom BOE Number"/>
+											<t:template>
+												<Input id="custom_boe_no" tooltip="" value="{list1>custom_boe_no}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" maxLength="25"/>
+											</t:template>
+										</t:Column>
+										<t:Column id="iamny" tooltip=" " width="10em">
+											<Label text="Custom BOE Date"/>
+											<t:template>
+												<DatePicker id="custom_boe_date" value=" {path: 'list1>custom_boe_date',formatter:'LICE.Formatter.convertToJsondate'}"
+													valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="OnchangeDate" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+												
+											</t:template>
+										</t:Column>
+										<t:Column id="sd" tooltip="" width="10em">
+											<Label text="Bank charges"/>
+											<t:template>
+												<Input id="bank_charges" value="{list1>bank_charges}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" maxLength="13" liveChange="DecCheck1"/>
+											</t:template>
+										</t:Column>
+										<t:Column id="debno" tooltip=" " width="10em">
+								<Label text="Debit Note No"/>
+								<t:template>
+										<Input id="vbeln" tooltip="" value="{list1>vbeln}" enabled="true" maxLength="10" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+									</t:template>
+								</t:Column>
+								<t:Column id="dbtndt" tooltip=" " width="10em">
+									<Label text="Debit Note Date"/>
+									<t:template>
+										<DatePicker id="fkdat" value=" {path: 'list1>fkdat'}"
+											 valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="OnchangeDatedbt" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+								</t:template>
+								</t:Column>
+								<t:Column id="debitnoteamt1" tooltip=" " width="10em">
+									<Label text="Debit Note Amount"/>
+								<t:template>
+										<Input id="db_amt" tooltip="" value="{list1>db_amt}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" maxLength="13" liveChange="DecCheck2"  />
+									</t:template>
+								</t:Column>
+										<t:Column id="debitnotermrk1" tooltip=" " width="10em">
+											<Label text="Debit Note Remark"/>
+											<t:template>
+												<Input id="remark" tooltip="" value="{list1>remark}" maxLength="250" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+											</t:template>
+										</t:Column>
+										<t:Column id="iditemdel" width="4em">
+											<Label text="Accept"/>
+											<t:template>										 
+												<ToggleButton id="Acptid" text="Retire" press="OnPressAccept" design="Emphasized" accessibleNameRef="labelDesignTypes" visible="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"></ToggleButton>										
+											</t:template>
+										</t:Column>
+									</t:columns>
+									<!-- <t:rowActionTemplate>
+										<t:RowAction>
+											<t:items>
+												<t:RowActionItem id="Acptid" text="Accept" design="Positive" icon="sap-icon://accept" press="OnPressAccept" class="sapUiTinyMarginEnd"/>
+											</t:items>
+									</t:RowAction>
+									</t:rowActionTemplate> -->
+								</t:Table>
+							</IconTabFilter>
+						</items>
+					</IconTabBar>
+				</content>
+				<footer>
+					<OverflowToolbar id="detailFooter">
+						<ToolbarSpacer/>
+						<Button id="save" text="Save" type="Accept" press="onUpdateLicense" visible="false"/>
+					</OverflowToolbar>
+				</footer>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>

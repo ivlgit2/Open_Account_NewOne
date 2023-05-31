@@ -1,0 +1,7 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<SelectDialog title="Payment Terms" class="sapUiPopupWithPadding" items="{Vendor_Model>/payment_terms}" liveChange="_handleValueHelpSearchpymntrm"
+		confirm="_handleValueHelpClosepymntrm" cancel="_handleValueHelpClosepymntrm">
+		<StandardListItem iconDensityAware="false" iconInset="false" title="{Vendor_Model>codtyp}" description="{Vendor_Model>coddesc}"/>
+	</SelectDialog>
+</core:FragmentDefinition>
+

@@ -1,0 +1,32 @@
+<!--<core:FragmentDefinition xmlns="sap.m" xmlns:l="sap.ui.layout" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">-->
+<!--	<Dialog title="Invoive Selection Conditions" contentWidth="30%" id="ListDialog" afterClose="onAfterClose">-->
+<!--		<f:SimpleForm id="shipmentdetailsform" title="" editable="true" layout="ResponsiveGridLayout" labelSpanXL="6" labelSpanL="6" labelSpanM="6"-->
+<!--			labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0" columnsXL="3" columnsL="2" columnsM="2"-->
+<!--			singleContainerFullSize="false">-->
+<!--			<f:content>-->
+<!--				<Label text="Invoice Number Selection"/>-->
+<!--				<Input id="invoicenr" textFormatMode="Value" enabled="{State>/enable}" type="Text" value="{list1>invoicenr}" showSuggestion="true"-->
+<!--					valueLiveUpdate="true" showValueHelp="true" valueHelpRequest="handleValueHelpInvNo" liveChange="onChangeDocNo"-->
+<!--					suggestionItemSelected="onSelectSuggestedItem"></Input>-->
+<!--			</f:content>-->
+<!--		</f:SimpleForm>-->
+<!--		<Toolbar>-->
+<!--			<ToolbarSpacer/>-->
+<!--			<Button press="onDialogClose" text="Add" id="save" visible="true" type="Accept" icon="sap-icon://save"/>-->
+<!--			<Button press="onDialogExit" text="Close" id="cancel" visible="true" type="Reject" icon="sap-icon://decline"/>-->
+<!--		</Toolbar>-->
+<!--	</Dialog>-->
+<!--</core:FragmentDefinition>-->
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:layout="sap.ui.layout">
+	<Dialog title="Invoice Number Selection" class="sapUiPopupWithPadding" >
+		<content>
+			<Input id="poNoDialog" textFormatMode="Value" showSuggestion="true"
+				valueLiveUpdate="true" showValueHelp="true" valueHelpRequest="handleValueHelpInvNo" liveChange="onChangeDocNo"
+				suggestionItemSelected="onSelectSuggestedItem"></Input>
+		</content>
+		<buttons>
+			<Button press="onDialogAdd" text="Add" id="save" visible="true" type="Accept" icon="sap-icon://save"/>
+			<Button press="onDialogExit" text="Close" id="cancel" visible="true" type="Reject" icon="sap-icon://decline"/>
+		</buttons>
+	</Dialog>
+</core:FragmentDefinition>
