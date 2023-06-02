@@ -67,7 +67,7 @@
 								<Label text="Beneficiary Acc.No"/>
 								<Input value="{lcCreateHDRModel>/bankn}" id="bankn" enabled="true" maxLength="18"  />
 								<Label text="Bank Excange Rate"/>
-								<Input value="{lcCreateHDRModel>/bank_exc_rate}" id="bank_exc_rate" maxLength="12" liveChange="DecCheck" enabled="true" />
+								<Input value="{lcCreateHDRModel>/bank_exc_rate}" id="bank_exc_rate" maxLength="11" liveChange="DecCheck" enabled="true" />
 								<Label text="Total Amount"/>
 								<Input value="{lcCreateHDRModel>/totinvval}" id="totinvval" type="Number" enabled="false" width="300px" liveChange="intcheck"/>
 								<!--<Input id="tcurr" type="Text" enabled="false" width="107px"></Input>-->
@@ -177,6 +177,18 @@
 									<Label text="Amount Payable"/>
 									<t:template>
 										<Input value="{tableLists>amount_payable}" id="amount_payable" type="Number" liveChange="calculateAmount"/>
+									</t:template>
+								</t:Column>
+								<t:Column id="idmeslumnw" tooltip="" width="10em">
+									<Label text="Bank Exchange Rate"/>
+									<t:template>
+										<Input value="{tableLists>bank_exc_rate}" id="bank_ex"  enabled="false" maxLength="12"/>
+									</t:template>
+								</t:Column>
+								<t:Column id="idmeslumng" tooltip="" width="10em">
+									<Label text="Amount In INR"/>
+									<t:template>
+										<Input value="{tableLists>amount_inr}" id="amount_inr" enabled="false" maxLength="13"/>
 									</t:template>
 								</t:Column>
 								<t:Column id="bln" tooltip="" width="10em">

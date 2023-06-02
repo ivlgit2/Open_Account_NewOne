@@ -18,6 +18,12 @@ sap.ui.define([
 		},
 		_handleRouteMatched: function (oEvent) {
 			debugger;
+
+			var oModelData = new sap.ui.model.json.JSONModel();
+			oModelData.setData(this.temjson1);
+			this.getView().setModel(oModelData, "list1");
+			this.getView().getModel("list1").refresh();
+
 			this.temjson = {
 				results: []
 			};
@@ -527,13 +533,6 @@ sap.ui.define([
 			debugger;
 			var _self = this;
 
-			// if (_self.temjson1.results != undefined) {
-			// 	for (var i = 0; i < _self.temjson1.results.length; i++) {
-			// 		if (_self.temjson1.results[i].checked == "true") {
-			// 			var cb = oTable.addSelectionInterval(i, i);
-			// 		}
-			// 	}
-			// }
 			if (oEvent.mParameters.userInteraction == true) {
 
 				var oTable = _self.byId("idItemTtable");
@@ -651,10 +650,47 @@ sap.ui.define([
 										_self.getView().byId("totinvval_curr").setValue("");
 										_self.getView().byId("totamtpaid_curr").setValue("");
 										_self.getView().byId("tcurr2").setValue("");
+										for (var i = 0; i < _self.temjson1.results.length; i++) {
+											// this.getView().byId("bank_exc_rate").setValue(0);
+											for (var i = 0; i < _self.temjson1.results.length; i++) {
+												const object = _self.temjson1.results[i];
+												// if (object.checked == "true") {
+												object.bank_exc_rate = 0;
+												object.amount_inr = object.bank_exc_rate * object.amount_payable;
+												// }
+											}
+											_self.getView().getModel("list1").setData(_self.temjson1);
+											_self.getView().getModel("list1").refresh();
+
+										}
 									}
 
 								}
 
+							}
+							for (var i = 0; i < _self.temjson1.results.length; i++) {
+								const object = _self.temjson1.results[i];
+								if (object.checked == "false") {
+									object.bank_exc_rate = 0;
+									object.amount_inr = object.bank_exc_rate * object.amount_payable;
+									object.amount_inr = object.amount_inr.toFixed(4);
+								}
+								else {
+									object.bank_exc_rate = _self.getView().byId("bank_exc_rate").getValue();
+									object.amount_inr = object.bank_exc_rate * object.amount_payable;
+									object.amount_inr = object.amount_inr.toFixed(4);
+								}
+							}
+							_self.getView().getModel("list1").setData(_self.temjson1);
+							_self.getView().getModel("list1").refresh();
+
+							if (_self.temjson1.results != undefined) {
+								for (var i = 0; i < _self.temjson1.results.length; i++) {
+									if ((_self.temjson1.results[i].retirement == "X") && (_self.temjson1.results[i].checked == "false")) {
+										MessageBox.error("Cant Unselect an item once it is retire");
+										return;
+									}
+								}
 							}
 
 						}
@@ -752,26 +788,54 @@ sap.ui.define([
 				_self.Invvalue = _self.temjson1.results[tableIndex].openacc_value;
 				_self.Invvalue = parseFloat(_self.Invvalue);
 				_self.amnoutntpayble = oEvent.getSource().getParent().getCells()[8].getValue();
+
 				// _self.amnoutntpayble = oTable.getRows()[oTable.getSelectedIndex()].getCells()[5].mProperties.value;
 
 				if (_self.temjson1.results[b].checked == "true") {
 					if (_self.amnoutntpayble != "") {
 						_self.amnoutntpayble = parseFloat(_self.amnoutntpayble);
+						_self.amnoutntpayble = _self.amnoutntpayble + ".00";
 						_self.temjson1.results[tableIndex].amount_payable = _self.amnoutntpayble;
 						var TotalAppliedAmount = parseFloat(TotalAppliedAmount) + parseFloat(_self.temjson1.results[b].amount_payable);
 						_self.getView().byId("totamtpaid").setValue(TotalAppliedAmount);
 						var TotalinvAmount = parseFloat(TotalinvAmount) + parseFloat(_self.temjson1.results[b].openacc_value);
 						TotalAppliedAmount = TotalAppliedAmount ? TotalAppliedAmount : 0;
 						_self.getView().byId("totinvval").setValue(TotalinvAmount);
+						/////////////////////****amountinr */
+						for (var i = 0; i < _self.temjson1.results.length; i++) {
+							const object = _self.temjson1.results[i];
+							if (object.checked == "true") {
+								object.bank_exc_rate = _self.getView().byId("bank_exc_rate").getValue();
+								object.amount_inr = object.bank_exc_rate * object.amount_payable;
+								object.amount_inr = object.amount_inr.toFixed(4);
+							}
+						}
+						_self.getView().getModel("list1").setData(_self.temjson1);
+						_self.getView().getModel("list1").refresh();
+
+
 					} else {
 						// var getvalue = parseFloat(_self.getView().byId("totamtpaid").getValue());
 						// var TotalAppliedAmount = parseFloat(_self.getView().byId("totamtpaid").getValue()) - parseFloat(_self.temjson1.results[b].amount_payable);
 						_self.getView().byId("totamtpaid").setValue(_self.amnoutntpayble);
+						for (var i = 0; i < _self.temjson1.results.length; i++) {
+							const object = _self.temjson1.results[i];
+							// if (object.checked == "true") {
+								// object.bank_exc_rate = _self.getView().byId("bank_exc_rate").getValue();
+								// object.amount_inr = object.bank_exc_rate * object.amount_payable;
+								object.amount_inr =0;
+								object.amount_inr = object.amount_inr.toFixed(4);
+							// }
+						}
+						_self.getView().getModel("list1").setData(_self.temjson1);
+						_self.getView().getModel("list1").refresh();
 					}
 
 				} else if (_self.temjson1.results[b].checked == undefined) {
 					if (_self.amnoutntpayble != "") {
 						_self.amnoutntpayble = parseFloat(_self.amnoutntpayble);
+						// _self.amnoutntpayble =_self.amnoutntpayble.toFixed(2);
+						_self.amnoutntpayble = _self.amnoutntpayble + ".00";
 						_self.temjson1.results[tableIndex].amount_payable = _self.amnoutntpayble;
 						var TotalAppliedAmount = parseFloat(TotalAppliedAmount) + parseFloat(_self.temjson1.results[b].amount_payable);
 						_self.getView().byId("totamtpaid").setValue(TotalAppliedAmount);
@@ -855,7 +919,7 @@ sap.ui.define([
 
 		},
 		// onUpdateLicense: function (oEvent) {
-			 onPressSave: function (oEvent) {
+		onPressSave: function (oEvent) {
 			debugger;
 
 			this._OpenBusyDialog();
@@ -1072,6 +1136,7 @@ sap.ui.define([
 					delete _self.temjson1.results[i].boldt;
 					delete _self.temjson1.results[i].consigncod;
 					delete _self.temjson1.results[i].lifnr;
+
 					_self.omdelItem.update(
 						"/xBRIxopen_account_ITEM(intno='" + _self.intno +
 						"',docnr='" + _self.temjson1.results[
@@ -1287,15 +1352,33 @@ sap.ui.define([
 		},
 		OnPressAccept: function (oEvent) {
 			debugger;
+
 			var _self = this;
+
+			// , {
+			// 	actions: [sap.m.MessageBox.Action.OK],
+			// 	onClose: function (oAction) {
+			// 		if (oAction === sap.m.MessageBox.Action.OK) {
+			// 			if (sPrevHash !== undefined) {
+			// 				window.history.go(-1);
+			// 			} else {
+			// 				_self.router.navTo("openacntlist", true);
+			// 			}
+			// 		}
+			// 	}
+			// }
+
+
 			var oTable = _self.byId("idItemTtable");
 			var lengthOfCell = oTable.getSelectedIndices().length;
 			// var rowval = oEvent.getSource().getParent().sId.slice(33);
 			// var rowval = parseFloat(rowval);
 			var rowval = oEvent.getSource().getParent().getIndex();
 			if (oEvent.oSource.mProperties.pressed == true) {
+				MessageBox.warning("Are you sure for Retire an item?");
 				_self.temjson1.results[rowval].retirement = "X";
 			} else {
+				MessageBox.warning("Are you sure for Unretire an item?");
 				_self.temjson1.results[rowval].retirement = "";
 			}
 			// oTable.setEnableSelectAll(false);
@@ -1651,7 +1734,7 @@ sap.ui.define([
 					} else {
 						var Data = _self.onPressSave();
 					}
-				} else {}
+				} else { }
 			} else {
 
 			}
@@ -1871,19 +1954,76 @@ sap.ui.define([
 		// 	}
 		// },
 		DecCheck: function (oEvent) {
+			// debugger;
+			// var val = oEvent.mParameters.newValue;
+			// var val2 = isNaN(val);
+			// if ((val2) == true) {
+			// 	MessageBox.error("Only accept Numbers");
+			// 	this.getView().byId("bank_exc_rate").setValue("");
+			// }
+			// var val = parseFloat(val);
+			// var roundedNumber = val.toFixed(4);
+			// if (roundedNumber != val) {
+			// 	MessageBox.error("Error: Number should have at most four decimal places.");
+			// 	this.getView().byId("bank_exc_rate").setValue("");
+			// }
+
 			debugger;
 			var val = oEvent.mParameters.newValue;
+
 			var val2 = isNaN(val);
 			if ((val2) == true) {
 				MessageBox.error("Only accept Numbers");
 				this.getView().byId("bank_exc_rate").setValue("");
 			}
-			var val = parseFloat(val);
-			var roundedNumber = val.toFixed(4);
-			if (roundedNumber != val) {
-				MessageBox.error("Error: Number should have at most four decimal places.");
-				this.getView().byId("bank_exc_rate").setValue("");
+			if (val != "") {
+				var val = parseFloat(val);
+				var roundedNumber = val.toFixed(4);
+				if (roundedNumber != val) {
+					MessageBox.error("Error: Number should have at most four decimal places.");
+					// var msg = "Error: Number should have at most four decimal places.";
+					this.getView().byId("bank_exc_rate").setValue(0);
+					for (var i = 0; i < this.temjson1.results.length; i++) {
+						const object = this.temjson1.results[i];
+						if (object.checked == "true") {
+							object.bank_exc_rate = val;
+							object.amount_inr = this.getView().byId("bank_exc_rate").getValue() * object.amount_payable;
+						}
+					}
+					this.getView().getModel("list1").setData(this.temjson1);
+					this.getView().getModel("list1").refresh();
+
+				}
+				else {
+					for (var i = 0; i < this.temjson1.results.length; i++) {
+						const object = this.temjson1.results[i];
+						if (object.checked == "true") {
+							object.bank_exc_rate = val;
+							object.amount_inr = object.bank_exc_rate * object.amount_payable;
+							object.amount_inr = object.amount_inr.toFixed(4);
+						}
+					}
+					this.getView().getModel("list1").setData(this.temjson1);
+					this.getView().getModel("list1").refresh();
+				}
 			}
+			else {
+				for (var i = 0; i < this.temjson1.results.length; i++) {
+					const object = this.temjson1.results[i];
+					if (object.checked == "true") {
+						object.bank_exc_rate = val;
+						object.amount_inr = object.bank_exc_rate * object.amount_payable;
+						object.amount_inr = object.amount_inr.toFixed(4);
+					}
+				}
+				this.getView().getModel("list1").setData(this.temjson1);
+				this.getView().getModel("list1").refresh();
+			}
+
+
+
+
+
 
 		},
 		DecCheck1: function (oEvent) {
@@ -1910,7 +2050,14 @@ sap.ui.define([
 			var rowval = oEvent.getSource().getParent().getIndex();
 			var oTable = this.byId("idItemTtable");
 			var val = oEvent.mParameters.newValue;
-			
+
+
+			if ((val == "") || (val == " ")) {
+				// if (val == " ") {
+				MessageBox.error("Cant make Debit Amount filed as null");
+				return;
+			}
+
 			var val2 = isNaN(val);
 			if ((val2) == true) {
 				MessageBox.error("Only accept Numbers");
@@ -1920,7 +2067,7 @@ sap.ui.define([
 			var roundedNumber = val.toFixed(3);
 			if (roundedNumber != val) {
 				MessageBox.error("Error: Number should have at most three decimal places.");
-				this.tempjson.results[rowval].db_amt="";
+				this.tempjson.results[rowval].db_amt = "";
 				// this.getView().byId("db_amt").setValue("");
 			}
 

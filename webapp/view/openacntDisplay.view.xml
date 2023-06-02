@@ -62,7 +62,7 @@
 										<Label text="Beneficiary Acc.No"/>
 										<Input value="{Lists>/bankn}" enabled="{State>/enable}" id="bankn"  liveChange="Numbercheck3" maxLength="18"/>
 										<Label text="Bank Excange Rate"/>
-										<Input value="{Lists>/bank_exc_rate}" id="bank_exc_rate" enabled="{State>/enable}"  liveChange="DecCheck" maxLength="12" />
+										<Input value="{Lists>/bank_exc_rate}" id="bank_exc_rate" enabled="{State>/enable}"  liveChange="DecCheck" maxLength="11" />
 										<Label text="Total Amount"/>
 										<Input value="{Lists>/totinvval}" id="totinvval" enabled="false" width="300px" liveChange="intcheck"/>
 										<!--<Label text=""/>-->
@@ -177,6 +177,18 @@
 													liveChange="calculateAmount"/>						
 											</t:template>
 										</t:Column>
+										<t:Column id="idmeslumnw" tooltip="" width="10em">
+									<Label text="Bank Exchange Rate"/>
+									<t:template>
+										<Input value="{list1>bank_exc_rate}" id="bank_ex"  enabled="false" maxLength="12"/>
+									</t:template>
+								</t:Column>
+								<t:Column id="idmeslumng" tooltip="" width="10em">
+									<Label text="Amount In INR"/>
+									<t:template>
+										<Input value="{list1>amount_inr}" id="amount_inr" enabled="false" maxLength="13"/>
+									</t:template>
+								</t:Column>
 										<t:Column id="bln" tooltip="" width="10em">
 									<Label text="BL/Consignment No/HaWb No"/>
 									<t:template>
@@ -293,7 +305,7 @@
 											</t:template>
 										</t:Column>
 										<t:Column id="iditemdel" width="4em">
-											<Label text="Accept"/>
+											<Label text="Retire"/>
 											<t:template>										 
 												<ToggleButton id="Acptid" text="Retire" press="OnPressAccept" design="Emphasized" accessibleNameRef="labelDesignTypes" visible="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"></ToggleButton>										
 											</t:template>
