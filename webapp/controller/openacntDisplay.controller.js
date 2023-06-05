@@ -292,6 +292,8 @@ sap.ui.define([
 				openacc_value: "",
 				openacc_curr: "",
 				amount_payable: "",
+				bank_exc_rate: "",
+				amount_inr: "",
 				pol: "",
 				pol_desc: "",
 				pod: "",
@@ -308,6 +310,7 @@ sap.ui.define([
 				bank_charges: "",
 				vbeln: "",
 				fkdat: "",
+				db_amt: "",
 				remark: "",
 				flag: "X"
 
@@ -593,13 +596,66 @@ sap.ui.define([
 						_self.getView().byId("totamtpaid").setValue("0");
 						_self.getView().byId("balance").setValue("0");
 					}
+					for (var i = 0; i < _self.temjson1.results.length; i++) {
+						// this.getView().byId("bank_exc_rate").setValue(0);
+						for (var i = 0; i < _self.temjson1.results.length; i++) {
+							const object = _self.temjson1.results[i];
+							object.bank_exc_rate = _self.getView().byId("bank_exc_rate").getValue();
+							// if (object.bank_exc_rate.includes(".")) {
+							// 	for (var i = 0; i < this.tempjson.results.length; i++) {
+							// 		this.bank = this.tempjson.results[i].bank_exc_rate;
+							// 		if ((this.bank != undefined) && (this.bank != 0)) {
+							// 			this.bank1 = this.bank.slice(0, -2);
+							// 		}
+
+							// 	}
+							// 	object.bank_exc_rate = this.bank1;
+
+							// }
+							object.amount_inr = object.bank_exc_rate * object.amount_payable;
+							object.amount_inr = object.amount_inr.toFixed(2);
+						}
+						_self.getView().getModel("list1").setData(_self.temjson1);
+						_self.getView().getModel("list1").refresh();
+
+					}
+
+
 				} else if (allselect == undefined && rowval == -1) {
 					for (var b = 0; b < _self.temjson1.results.length; b++) {
 						_self.temjson1.results[b].checked = "false";
 					}
+					_self.getView().byId("totinvval_curr").setValue("");
+					_self.getView().byId("totamtpaid_curr").setValue("");
+					_self.getView().byId("tcurr2").setValue("");
 					_self.getView().byId("totinvval").setValue("0");
 					_self.getView().byId("totamtpaid").setValue("0");
 					_self.getView().byId("balance").setValue("0");
+
+					// for (var i = 0; i < _self.temjson1.results.length; i++) {
+					// 	if ((_self.temjson1.results[i].retirement == "X") && (_self.temjson1.results[i].checked == "false")) {
+					// 		MessageBox.error("Cant Unselect an item once it is retire");
+					// 		//  oTable.addSelectionInterval(rowval, rowval);
+					// 		  return;
+					// 	}
+					// }
+
+					for (var i = 0; i < _self.temjson1.results.length; i++) {
+						// this.getView().byId("bank_exc_rate").setValue(0);
+						for (var i = 0; i < _self.temjson1.results.length; i++) {
+							const object = _self.temjson1.results[i];
+							// if (object.checked == "true") {
+							object.bank_exc_rate = 0;
+							object.amount_inr = object.bank_exc_rate * object.amount_payable;
+							// }
+						}
+						_self.getView().getModel("list1").setData(_self.temjson1);
+						_self.getView().getModel("list1").refresh();
+
+					}
+
+
+
 
 				}
 
@@ -636,6 +692,7 @@ sap.ui.define([
 										}
 									} else {
 										MessageBox.error("Cannot select item with different currency ");
+										oTable.removeSelectionInterval(rowval, rowval);
 
 									}
 								}
@@ -664,6 +721,18 @@ sap.ui.define([
 
 										}
 									}
+									else if (_self.temjson1.results[i].checked == "false") {
+										for (var i = 0; i < _self.temjson1.results.length; i++) {
+											const object = _self.temjson1.results[i];
+
+											object.bank_exc_rate = 0;
+											object.amount_inr = object.bank_exc_rate * object.amount_payable;
+											object.amount_inr = object.amount_inr.toFixed(2);
+
+										}
+										_self.getView().getModel("list1").setData(_self.temjson1);
+										_self.getView().getModel("list1").refresh();
+									}
 
 								}
 
@@ -672,13 +741,29 @@ sap.ui.define([
 								const object = _self.temjson1.results[i];
 								if (object.checked == "false") {
 									object.bank_exc_rate = 0;
-									object.amount_inr = object.bank_exc_rate * object.amount_payable;
-									object.amount_inr = object.amount_inr.toFixed(4);
+									if (object.amount_payable != undefined) {
+										object.amount_inr = object.bank_exc_rate * object.amount_payable;
+										object.amount_inr = object.amount_inr.toFixed(2);
+									}
 								}
 								else {
 									object.bank_exc_rate = _self.getView().byId("bank_exc_rate").getValue();
-									object.amount_inr = object.bank_exc_rate * object.amount_payable;
-									object.amount_inr = object.amount_inr.toFixed(4);
+									// if (object.bank_exc_rate.includes(".")) {
+									// 	for (var i = 0; i < this.tempjson.results.length; i++) {
+									// 		this.bank = this.tempjson.results[i].bank_exc_rate;
+									// 		if ((this.bank != undefined) && (this.bank != 0)) {
+									// 			this.bank1 = this.bank.slice(0, -2);
+									// 		}
+
+									// 	}
+									// 	object.bank_exc_rate = this.bank1;
+
+									// }
+									if (object.amount_payable != undefined) {
+										object.amount_inr = object.bank_exc_rate * object.amount_payable;
+										object.amount_inr = object.amount_inr.toFixed(2);
+									}
+
 								}
 							}
 							_self.getView().getModel("list1").setData(_self.temjson1);
@@ -688,7 +773,8 @@ sap.ui.define([
 								for (var i = 0; i < _self.temjson1.results.length; i++) {
 									if ((_self.temjson1.results[i].retirement == "X") && (_self.temjson1.results[i].checked == "false")) {
 										MessageBox.error("Cant Unselect an item once it is retire");
-										return;
+										oTable.addSelectionInterval(rowval, rowval);
+										// return;
 									}
 								}
 							}
@@ -789,12 +875,14 @@ sap.ui.define([
 				_self.Invvalue = parseFloat(_self.Invvalue);
 				_self.amnoutntpayble = oEvent.getSource().getParent().getCells()[8].getValue();
 
+
+				// _self.amnoutntpayble =_self.amnoutntpayble.toFixed(2);
 				// _self.amnoutntpayble = oTable.getRows()[oTable.getSelectedIndex()].getCells()[5].mProperties.value;
 
 				if (_self.temjson1.results[b].checked == "true") {
 					if (_self.amnoutntpayble != "") {
 						_self.amnoutntpayble = parseFloat(_self.amnoutntpayble);
-						_self.amnoutntpayble = _self.amnoutntpayble + ".00";
+						// _self.amnoutntpayble = _self.amnoutntpayble + ".00";
 						_self.temjson1.results[tableIndex].amount_payable = _self.amnoutntpayble;
 						var TotalAppliedAmount = parseFloat(TotalAppliedAmount) + parseFloat(_self.temjson1.results[b].amount_payable);
 						_self.getView().byId("totamtpaid").setValue(TotalAppliedAmount);
@@ -806,8 +894,19 @@ sap.ui.define([
 							const object = _self.temjson1.results[i];
 							if (object.checked == "true") {
 								object.bank_exc_rate = _self.getView().byId("bank_exc_rate").getValue();
+								// if (object.bank_exc_rate.includes(".")) {
+								// 	for (var i = 0; i < this.tempjson.results.length; i++) {
+								// 		this.bank = this.tempjson.results[i].bank_exc_rate;
+								// 		if ((this.bank != undefined) && (this.bank != 0)) {
+								// 			this.bank1 = this.bank.slice(0, -2);
+								// 		}
+
+								// 	}
+								// 	object.bank_exc_rate = this.bank1;
+
+								// }
 								object.amount_inr = object.bank_exc_rate * object.amount_payable;
-								object.amount_inr = object.amount_inr.toFixed(4);
+								object.amount_inr = object.amount_inr.toFixed(2);
 							}
 						}
 						_self.getView().getModel("list1").setData(_self.temjson1);
@@ -821,10 +920,10 @@ sap.ui.define([
 						for (var i = 0; i < _self.temjson1.results.length; i++) {
 							const object = _self.temjson1.results[i];
 							// if (object.checked == "true") {
-								// object.bank_exc_rate = _self.getView().byId("bank_exc_rate").getValue();
-								// object.amount_inr = object.bank_exc_rate * object.amount_payable;
-								object.amount_inr =0;
-								object.amount_inr = object.amount_inr.toFixed(4);
+							// object.bank_exc_rate = _self.getView().byId("bank_exc_rate").getValue();
+							// object.amount_inr = object.bank_exc_rate * object.amount_payable;
+							object.amount_inr = 0;
+							object.amount_inr = object.amount_inr.toFixed(2);
 							// }
 						}
 						_self.getView().getModel("list1").setData(_self.temjson1);
@@ -834,8 +933,8 @@ sap.ui.define([
 				} else if (_self.temjson1.results[b].checked == undefined) {
 					if (_self.amnoutntpayble != "") {
 						_self.amnoutntpayble = parseFloat(_self.amnoutntpayble);
-						// _self.amnoutntpayble =_self.amnoutntpayble.toFixed(2);
-						_self.amnoutntpayble = _self.amnoutntpayble + ".00";
+						//  _self.amnoutntpayble =_self.amnoutntpayble.toFixed(2);
+						//  _self.amnoutntpayble = _self.amnoutntpayble + ".00";
 						_self.temjson1.results[tableIndex].amount_payable = _self.amnoutntpayble;
 						var TotalAppliedAmount = parseFloat(TotalAppliedAmount) + parseFloat(_self.temjson1.results[b].amount_payable);
 						_self.getView().byId("totamtpaid").setValue(TotalAppliedAmount);
@@ -850,6 +949,7 @@ sap.ui.define([
 				}
 
 			}
+
 			_self.totalinvAmount = 0;
 			for (var i = 0; i < _self.temjson1.results.length; i++) {
 				if (_self.temjson1.results[i].checked == "true") {
@@ -985,7 +1085,7 @@ sap.ui.define([
 					_self.temjson1.results[i].custom_boe_date = null;
 				}
 				else if (_self.temjson1.results[i].bank_charges == "") {
-					_self.temjson1.results[i].bank_charges = '0.000';
+					_self.temjson1.results[i].bank_charges = '0.00';
 				}
 			}
 			// if (_self.oEntry.pay_date == '') {
@@ -1008,6 +1108,25 @@ sap.ui.define([
 
 			//********************************item update*********************************************************//
 			// var _self = this;
+
+			// for (var i = 0; i < _self.temjson1.results.length; i++) {
+			// 	if (_self.temjson1.results[i].checked == "true") {
+			// 		// if (_self.temjson1.results[i].amnoutntpayble != undefined)
+			// 			_self.amnoutntpayble = _self.amnoutntpayble + ".00";
+			// 	 }
+			// }
+
+
+			for (var i = 0; i < _self.temjson1.results.length; i++) {
+				const object = _self.temjson1.results[i];
+				if (object.checked == "true") {
+					object.amount_payable =  object.amount_payable + ".00";
+					
+				}
+			}
+			_self.getView().getModel("list1").setData(_self.temjson1);
+			_self.getView().getModel("list1").refresh();
+
 			for (var i = 0; i < _self.temjson1.results.length; i += 1) {
 				if (_self.temjson1.results[i].checked == "true") {
 					if (_self.temjson1.results[i].amount_payable == "") {
@@ -1257,6 +1376,17 @@ sap.ui.define([
 				//else if ((_self.advpayitmValues2.results[e].checked == "true") && (_self.advpayitmValues2.results[e].flag == undefined))
 
 			}
+
+			// for (var i = 0; i < _self.temjson1.results.length; i += 1) {
+			// 	// if (_self.temjson1.results[i].checked == "true") {
+			// 		// if (_self.temjson1.results[i].amnoutntpayble = !undefined) {
+			// 			_self.amnoutntpayble = _self.amnoutntpayble + ".00";
+			// 		// }
+
+
+			// 	// }
+			// }
+			// _self.amnoutntpayble = _self.amnoutntpayble + ".00";
 
 			// var flag = 0;
 			// var invlen = _self.getView().byId("totinvval").getValue();
@@ -1686,11 +1816,12 @@ sap.ui.define([
 
 			if (this.byId("idSwtichMode").getState() === false) {
 				EnabledModel.setProperty('/enable', false);
-				this.AuthConfiguration("Change");
+				this.AuthConfiguration("Display");
 				// EnabledModelanetwr1.setProperty('/enable', false);
 				this.getView().byId("save").setVisible(false);
 				this.getView().byId("addItemBtns").setVisible(false);
 			} else {
+				this.AuthConfiguration("Change");
 				EnabledModel.setProperty('/enable', true);
 				// EnabledModelanetwr1.setProperty('/enable', true);
 				this.getView().byId("save").setVisible(true);
@@ -1740,38 +1871,123 @@ sap.ui.define([
 			}
 		},
 		AuthConfiguration: function (Type) {
+			debugger;
+			// var status = this.getView().byId("paymntstt").getValue();
+			// if (status == "Partially Paid") {
+			// 	var stat = "96";
+			// } else {
+			// 	var stat = "97";
+			// }
+			// if (Type == "Display") {
+			// 	var entity = "xBRIxI_UICONFIG03";
+			// } else if (Type == "Change") {
+			// 	var entity = "xBRIxI_UICONFIG";
+			// } else {
+			// 	var entity = "xBRIxI_UICONFIG01";
+			// }
+			// var _self = this;
+			// var filters = new Array();
+			// var filterval = new sap.ui.model.Filter("modid", sap.ui.model.FilterOperator.EQ, "OPAC");
+			// filters.push(filterval);
+			// var filterval = new sap.ui.model.Filter("status", sap.ui.model.FilterOperator.EQ, stat);
+			// filters.push(filterval);
+			// this.RequiredFileds = new Array();
+			// this.RequiredFiledsDesc = new Array();
+			// this.RequiredFiledsErrorSts = new Array();
+			// this.ItemMand = new Array();
+			// this.ItemFiledsDesc = new Array();
+			// this.ItemFiledsErrorSts = new Array();
+			// this.ItemFiledsDropDwn = new Array();
+			// this.getOwnerComponent().getModel("config_model").read("/" + entity, {
+			// 	filters: filters,
+			// 	success: function (getData) {
+			// 		var arr = getData.results;
+			// 		console.log("Array");
+			// 		console.log(arr);
+			// 		for (var i = 0; i < arr.length; i++) {
+
+			// 			if (arr[i].entityset == "tab_") {
+			// 				_self.getView().byId('tab_' + arr[i].fldnam).setVisible((arr[i].visible == "true") ? true : false);
+			// 			} else
+			// 				if (arr[i].entityset == "btn_") {
+			// 					_self.getView().byId('btn_' + arr[i].fldnam).setVisible((arr[i].visible == "true") ? true : false);
+			// 				} else
+			// 					if (arr[i].tbl == true) {
+			// 						if (_self.getView().byId(arr[i].fldnam)) {
+			// 							_self.getView().byId(arr[i].fldnam).setVisible((arr[i].visible == "true") ? true : false);
+			// 						}
+			// 					} else {
+			// 						if (_self.getView().byId(arr[i].fldnam)) {
+			// 							_self.getView().byId(arr[i].fldnam).setVisible((arr[i].visible == "true") ? true : false);
+			// 							_self.getView().byId(arr[i].fldnam).setRequired((arr[i].required == "true") ? true : false);
+			// 							if (arr[i].required == "true") {
+			// 								if (arr[i].entityset.match("xBRIxopen_account_hdr")) {
+			// 									_self.ItemMand.push(arr[i].fldnam);
+			// 									_self.ItemFiledsDesc.push(arr[i].flddescr);
+			// 									_self.ItemFiledsErrorSts.push(arr[i].errstat);
+
+			// 								} else if (arr[i].entityset.match("xBRIxopen_account_ITEM")) {
+			// 									_self.RequiredFileds.push(arr[i].fldnam);
+			// 									_self.RequiredFiledsDesc.push(arr[i].flddescr);
+			// 									_self.RequiredFiledsErrorSts.push(arr[i].errstat);
+
+			// 								}
+			// 								/*_self.RequiredFileds.push(arr[i].fldnam);
+			// 								_self.RequiredFiledsDesc.push(arr[i].flddescr);
+			// 								_self.RequiredFiledsErrorSts.push(arr[i].errstat)*/
+			// 							}
+			// 						}
+			// 					}
+			// 		}
+			// 	},
+			// 	error: function (error) {
+			// 		MessageBox.error("Something Went Wrong . Please Try again Later");
+			// 	}
+			// });
+			// console.log(this.RequiredFileds);
+			// console.log(this.RequiredFiledsDesc);
+			// console.log(this.ItemMand);
 			var status = this.getView().byId("paymntstt").getValue();
 			if (status == "Partially Paid") {
 				var stat = "96";
 			} else {
 				var stat = "97";
 			}
+			var filters = new Array();
 			if (Type == "Display") {
-				var entity = "xBRIxI_UICONFIG03";
-			} else if (Type == "Change") {
 				var entity = "xBRIxI_UICONFIG";
-			} else {
-				var entity = "xBRIxI_UICONFIG01";
+				if (this.RequiredFileds) {
+					for (var i = 0; i < this.RequiredFileds.length; i++) {
+						this.byId(this.RequiredFileds[i]).setRequired(false);
+					}
+				}
+			} else if (Type == "Change") {
+				var filterval = new sap.ui.model.Filter("actvt", sap.ui.model.FilterOperator.EQ, "02");
+				filters.push(filterval);
+				var filterval = new sap.ui.model.Filter("status", sap.ui.model.FilterOperator.EQ, stat);
+				filters.push(filterval);
+				var entity = "xBRIxI_UICONFIG";
 			}
 			var _self = this;
-			var filters = new Array();
-			var filterval = new sap.ui.model.Filter("modid", sap.ui.model.FilterOperator.EQ, "OPAC");
-			filters.push(filterval);
-			var filterval = new sap.ui.model.Filter("status", sap.ui.model.FilterOperator.EQ, stat);
-			filters.push(filterval);
-			this.RequiredFileds = new Array();
-			this.RequiredFiledsDesc = new Array();
-			this.RequiredFiledsErrorSts = new Array();
-			this.ItemMand = new Array();
-			this.ItemFiledsDesc = new Array();
-			this.ItemFiledsErrorSts = new Array();
-			this.ItemFiledsDropDwn = new Array();
-			this.getOwnerComponent().getModel("config_model").read("/" + entity, {
+
+
+			_self.RequiredFileds = new Array(); //header
+			_self.RequiredFiledsDesc = new Array();
+			_self.RequiredFiledsErrorSts = new Array();
+			_self.RequiredFiledsDropDwn = new Array();
+			_self.ItemMand = new Array(); //items fields
+			_self.ItemFiledsDesc = new Array();
+			_self.ItemFiledsErrorSts = new Array();
+			_self.ItemFiledsDropDwn = new Array();
+
+			_self.getOwnerComponent().getModel("config_model").read("/" + entity, {
 				filters: filters,
 				success: function (getData) {
 					var arr = getData.results;
+
 					console.log("Array");
 					console.log(arr);
+
 					for (var i = 0; i < arr.length; i++) {
 
 						if (arr[i].entityset == "tab_") {
@@ -1790,19 +2006,23 @@ sap.ui.define([
 										_self.getView().byId(arr[i].fldnam).setRequired((arr[i].required == "true") ? true : false);
 										if (arr[i].required == "true") {
 											if (arr[i].entityset.match("xBRIxopen_account_hdr")) {
-												_self.ItemMand.push(arr[i].fldnam);
-												_self.ItemFiledsDesc.push(arr[i].flddescr);
-												_self.ItemFiledsErrorSts.push(arr[i].errstat);
-
-											} else if (arr[i].entityset.match("xBRIxopen_account_ITEM")) {
 												_self.RequiredFileds.push(arr[i].fldnam);
 												_self.RequiredFiledsDesc.push(arr[i].flddescr);
 												_self.RequiredFiledsErrorSts.push(arr[i].errstat);
 
+											} else if (arr[i].entityset.match("xBRIxopen_account_ITEM")) {
+												_self.ItemMand.push(arr[i].fldnam);
+												_self.ItemFiledsDesc.push(arr[i].flddescr);
+												_self.ItemFiledsErrorSts.push(arr[i].errstat);
+
 											}
-											/*_self.RequiredFileds.push(arr[i].fldnam);
-											_self.RequiredFiledsDesc.push(arr[i].flddescr);
-											_self.RequiredFiledsErrorSts.push(arr[i].errstat)*/
+											// else if (arr[i].entityset.match("xBRIxopen_account_ITEM")) {
+											//     _self.ItemMand.push(arr[i].fldnam);
+											//     _self.ItemFiledsDesc.push(arr[i].flddescr);
+											//     _self.ItemFiledsErrorSts.push(arr[i].errstat);
+
+											// }
+
 										}
 									}
 								}
@@ -1811,12 +2031,16 @@ sap.ui.define([
 				error: function (error) {
 					MessageBox.error("Something Went Wrong . Please Try again Later");
 				}
+
 			});
-			console.log(this.RequiredFileds);
-			console.log(this.RequiredFiledsDesc);
-			console.log(this.ItemMand);
+
+			console.log(_self.RequiredFileds);
+			console.log(_self.ItemMand);
+			console.log(_self.ItemFiledsDesc);
+
 		},
 		CheckRequiredFields: function (arr) {
+			debugger;
 			var ErrorMsg = "";
 			var WarningMsg = "";
 			var arra = this.RequiredFileds;
@@ -1845,6 +2069,7 @@ sap.ui.define([
 			return true;
 		},
 		CheckItemRequired: function (arr) {
+			debugger;
 			// delete arr.to_compliance;
 			// delete arr.__metadata;
 			var ErrorMsg = "";
@@ -1987,6 +2212,18 @@ sap.ui.define([
 						const object = this.temjson1.results[i];
 						if (object.checked == "true") {
 							object.bank_exc_rate = val;
+							object.bank_exc_rate = object.bank_exc_rate.toString();
+							// if (object.bank_exc_rate.includes(".")) {
+							// 	for (var i = 0; i < this.tempjson.results.length; i++) {
+							// 		this.bank = this.tempjson.results[i].bank_exc_rate;
+							// 		if ((this.bank != undefined) && (this.bank != 0)) {
+							// 			this.bank1 = this.bank.slice(0, -2);
+							// 		}
+
+							// 	}
+							// 	object.bank_exc_rate = this.bank1;
+
+							// }
 							object.amount_inr = this.getView().byId("bank_exc_rate").getValue() * object.amount_payable;
 						}
 					}
@@ -1999,8 +2236,20 @@ sap.ui.define([
 						const object = this.temjson1.results[i];
 						if (object.checked == "true") {
 							object.bank_exc_rate = val;
+							object.bank_exc_rate = object.bank_exc_rate.toString();
+							// if (object.bank_exc_rate.includes(".")) {
+							// 	for (var i = 0; i < this.tempjson.results.length; i++) {
+							// 		this.bank = this.tempjson.results[i].bank_exc_rate;
+							// 		if ((this.bank != undefined) && (this.bank != 0)) {
+							// 			this.bank1 = this.bank.slice(0, -2);
+							// 		}
+
+							// 	}
+							// 	object.bank_exc_rate = this.bank1;
+
+							// }
 							object.amount_inr = object.bank_exc_rate * object.amount_payable;
-							object.amount_inr = object.amount_inr.toFixed(4);
+							object.amount_inr = object.amount_inr.toFixed(2);
 						}
 					}
 					this.getView().getModel("list1").setData(this.temjson1);
@@ -2012,8 +2261,19 @@ sap.ui.define([
 					const object = this.temjson1.results[i];
 					if (object.checked == "true") {
 						object.bank_exc_rate = val;
+						// if (object.bank_exc_rate.includes(".")) {
+						// 	for (var i = 0; i < this.tempjson.results.length; i++) {
+						// 		this.bank = this.tempjson.results[i].bank_exc_rate;
+						// 		if ((this.bank != undefined) && (this.bank != 0)) {
+						// 			this.bank1 = this.bank.slice(0, -2);
+						// 		}
+
+						// 	}
+						// 	object.bank_exc_rate = this.bank1;
+
+						// }
 						object.amount_inr = object.bank_exc_rate * object.amount_payable;
-						object.amount_inr = object.amount_inr.toFixed(4);
+						object.amount_inr = object.amount_inr.toFixed(2);
 					}
 				}
 				this.getView().getModel("list1").setData(this.temjson1);
@@ -2033,12 +2293,12 @@ sap.ui.define([
 			var val2 = isNaN(val);
 			if ((val2) == true) {
 				MessageBox.error("Only accept Numbers");
-				this.getView().byId("bank_charges").setValue("");
+				this.temjson1.results[rowval].bank_charges = "";
 			}
 			var val = parseFloat(val);
-			var roundedNumber = val.toFixed(3);
+			var roundedNumber = val.toFixed(2);
 			if (roundedNumber != val) {
-				MessageBox.error("Error: Number should have at most three decimal places.");
+				MessageBox.error("Error: Number should have at most two decimal places.");
 				this.temjson1.results[rowval].bank_charges = "";
 			}
 
@@ -2061,13 +2321,13 @@ sap.ui.define([
 			var val2 = isNaN(val);
 			if ((val2) == true) {
 				MessageBox.error("Only accept Numbers");
-				this.getView().byId("db_amt").setValue("");
+				this.temjson1.results[rowval].db_amt = "";
 			}
 			var val = parseFloat(val);
-			var roundedNumber = val.toFixed(3);
+			var roundedNumber = val.toFixed(2);
 			if (roundedNumber != val) {
-				MessageBox.error("Error: Number should have at most three decimal places.");
-				this.tempjson.results[rowval].db_amt = "";
+				MessageBox.error("Error: Number should have at most two decimal places.");
+				this.temjson1.results[rowval].db_amt = "";
 				// this.getView().byId("db_amt").setValue("");
 			}
 

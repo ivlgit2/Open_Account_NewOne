@@ -66,7 +66,7 @@
 								<Input value="{lcCreateHDRModel>/accno}" id="accno" enabled="true" maxLength="25" />
 								<Label text="Beneficiary Acc.No"/>
 								<Input value="{lcCreateHDRModel>/bankn}" id="bankn" enabled="true" maxLength="18"  />
-								<Label text="Bank Excange Rate"/>
+								<Label text="Bank Exchange Rate"/>
 								<Input value="{lcCreateHDRModel>/bank_exc_rate}" id="bank_exc_rate" maxLength="11" liveChange="DecCheck" enabled="true" />
 								<Label text="Total Amount"/>
 								<Input value="{lcCreateHDRModel>/totinvval}" id="totinvval" type="Number" enabled="false" width="300px" liveChange="intcheck"/>
@@ -93,7 +93,7 @@
 								<Input value="{lcCreateHDRModel>/ad_code}" id="ad_code" enabled="true" maxLength="20" />
 								<Label text="Swift Code"/>
 								<Input value="{lcCreateHDRModel>/swift}" id="swift" enabled="false" />
-								<Label text="Incotrem"/>
+								<Label text="Incoterm"/>
 								<!--<Input value="{lcCreateHDRModel>/inco1}" id="inco1" enabled="true" width="223px"/>-->
 								<Input id="inco1" type="Text" textFormatMode="Key" showSuggestion="true" showValueHelp="true" valueHelpRequest="handleValueHelpincotrm"
 									suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true"></Input>

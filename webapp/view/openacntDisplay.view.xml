@@ -61,7 +61,7 @@
 										<Input value="{Lists>/accno}" enabled="{State>/enable}" id="accno"  liveChange="Numbercheck2" maxLength="25"/>
 										<Label text="Beneficiary Acc.No"/>
 										<Input value="{Lists>/bankn}" enabled="{State>/enable}" id="bankn"  liveChange="Numbercheck3" maxLength="18"/>
-										<Label text="Bank Excange Rate"/>
+										<Label text="Bank Exchange Rate"/>
 										<Input value="{Lists>/bank_exc_rate}" id="bank_exc_rate" enabled="{State>/enable}"  liveChange="DecCheck" maxLength="11" />
 										<Label text="Total Amount"/>
 										<Input value="{Lists>/totinvval}" id="totinvval" enabled="false" width="300px" liveChange="intcheck"/>
@@ -88,7 +88,7 @@
 										<Input value="{Lists>/ad_code}" id="ad_code" enabled="{State>/enable}" liveChange="Numbercheck4" maxLength="20"/>
 										<Label text="Swift Code"/>
 										<Input value="{Lists>/swift}" id="swift" enabled="false" />
-										<Label text="Incotrem"/>
+										<Label text="Incoterm"/>
 										<!--<Input value="{Lists>/vendor}" id="incotrm"  enabled="{State>/enable}" width="223px"/>-->
 										<Input id="inco1" type="Text" enabled="{State>/enable}" textFormatMode="Key" showSuggestion="true" showValueHelp="true"
 											valueHelpRequest="handleValueHelpincotrm" value="{Lists>/inco1}" suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true"></Input>

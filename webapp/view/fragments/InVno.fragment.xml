@@ -5,7 +5,7 @@
 <!--	</SelectDialog>-->
 <!--</core:FragmentDefinition>-->
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-	<TableSelectDialog id="idPoFragment" noDataText="No Data Found" title="Invoive Number Selection" search="_handleValueHelpSearchinvNo"
+	<TableSelectDialog id="idPoFragment" noDataText="No Data Found" title="Invoice Number Selection" search="_handleValueHelpSearchinvNo"
 		liveChange="_handleValueHelpSearchinvNo" confirm="_handleValueHelpCloseinvNo" cancel="_handleValueHelpCloseinvNo" items="{searchHelpModel>/results}" class="sapUiPopupWithPadding">
 		<ColumnListItem>
 			<cells>
@@ -24,7 +24,7 @@
 			</Column>
 			<Column width="12em">
 				<header>
-					<Text text="Invoive Number"/>
+					<Text text="Invoice Number"/>
 				</header>
 			</Column>
 			<Column width="12em">
