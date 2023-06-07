@@ -11,12 +11,13 @@ sap.ui.define([
 			this.router = sap.ui.core.UIComponent.getRouterFor(this);
 			this.router.attachRoutePatternMatched(this._handleRouteMatched, this);
 			this.omodelVendor = this.getOwnerComponent().getModel("Vendor_Model");
+			this.omodelCodetyp = this.getOwnerComponent().getModel("Vendor_Model");
 			this.omdelItem = this.getOwnerComponent().getModel("Item_Model");
 			// this.invoicfil = {
 			// 	results: []
 			// };
 		},
-		_handleRouteMatched: function (oEvent) {
+		_handleRouteMatched: async function (oEvent) {
 			debugger;
 
 			var oModelData = new sap.ui.model.json.JSONModel();
@@ -87,68 +88,184 @@ sap.ui.define([
 					//_self._CloseBusyDialog();
 				}
 			});
-			_self.getItem(_self.intno);
-
+			await _self.getItem(_self.intno);
+			_self.itemgetPort();
+			_self.itemgetCountry();
 			_self.OnChangeSwitch();
 		},
 		getItem: function (intno) {
 
 			var _self = this;
+			return new Promise(async (resolve, reject) => {
+				_self._OpenBusyDialog();
+				var oTable = _self.byId("idItemTtable");
+				this.omdelItem.read("/xBRIxopen_account_ITEM", {
+					success: function (response) {
+						if (response.results.length <= 0) {
+						} else {
+							_self.temjson1 = {
+								results: []
+							};
+							_self.temjson1.results = _self.temjson1.results.concat(response.results);
+							_self.temjson1.results = _self.temjson1.results.filter(a => a.intno == intno);
+							for (var i = 0; i < _self.temjson1.results.length; i++) {
+								_self.temjson1.results[i].checked = "true";
+							}
+							for (var i = 0; i < _self.temjson1.results.length; i++) {
+								_self.custdate = _self.temjson1.results[i].custom_boe_date;
+								_self.custom_boe_date = _self.ConvertJsonDate(_self.custdate);
+								_self.temjson1.results[i].custom_boe_date = _self.custom_boe_date;
+
+								_self.custdateata = _self.temjson1.results[i].ata;
+								_self.ata = _self.ConvertJsonDate(_self.custdateata);
+								_self.temjson1.results[i].ata = _self.ata;
+
+								_self.custdateatd = _self.temjson1.results[i].atd;
+								_self.atd = _self.ConvertJsonDate(_self.custdateatd);
+								_self.temjson1.results[i].atd = _self.atd;
+
+								_self.custdatefkdt = _self.temjson1.results[i].fkdat;
+								_self.fkdat = _self.ConvertJsonDate(_self.custdatefkdt);
+								_self.temjson1.results[i].fkdat = _self.fkdat;
+
+								_self.custdatefkdtpo_date = _self.temjson1.results[i].po_date;
+								_self.po_date = _self.ConvertJsonDate(_self.custdatefkdtpo_date);
+								_self.temjson1.results[i].po_date = _self.po_date;
+
+							}
+
+							var oModelData = new sap.ui.model.json.JSONModel();
+							oModelData.setData(_self.temjson1);
+							_self.getView().setModel(oModelData, "list1");
+
+						}
+						for (var i = 0; i < _self.temjson1.results.length; i++) {
+							if (_self.temjson1.results[i].checked == "true") {
+								var cb = oTable.addSelectionInterval(i, i);
+							}
+						}
+						_self._CloseBusyDialog();
+						resolve();
+					},
+
+					error: function (oError) {
+						MessageBox.error("Something Went Wrong . Please Try again Later");
+						_self._CloseBusyDialog();
+						reject();
+					}
+				});
+			})
+		},
+		itemgetPort: function () {
+			debugger;
+			var _self = this;
 			_self._OpenBusyDialog();
-			var oTable = _self.byId("idItemTtable");
-			this.omdelItem.read("/xBRIxopen_account_ITEM", {
-				success: function (response) {
-					if (response.results.length <= 0) {
-					} else {
-						_self.temjson1 = {
-							results: []
-						};
-						_self.temjson1.results = _self.temjson1.results.concat(response.results);
-						_self.temjson1.results = _self.temjson1.results.filter(a => a.intno == intno);
-						for (var i = 0; i < _self.temjson1.results.length; i++) {
-							_self.temjson1.results[i].checked = "true";
-						}
-						for (var i = 0; i < _self.temjson1.results.length; i++) {
-							_self.custdate = _self.temjson1.results[i].custom_boe_date;
-							_self.custom_boe_date = _self.ConvertJsonDate(_self.custdate);
-							_self.temjson1.results[i].custom_boe_date = _self.custom_boe_date;
+			// var pvalue = "PORT";
+			// var prvaEncode = encodeURIComponent(pvalue);
+			// _self.omodelCodetyp.read("/xBRIxCE_CODTYP(inparam='" + pvalue + "')/Set", {
+			// _self.omdelItem.read("/xBRIxi_open_account_item", {
+			_self.omodelCodetyp.read("/xBRIxI_PORT_CODTYP", {
+				// urlParameters: {
 
-							_self.custdateata = _self.temjson1.results[i].ata;
-							_self.ata = _self.ConvertJsonDate(_self.custdateata);
-							_self.temjson1.results[i].ata = _self.ata;
+				// 	"$top": "5000"
 
-							_self.custdateatd = _self.temjson1.results[i].atd;
-							_self.atd = _self.ConvertJsonDate(_self.custdateatd);
-							_self.temjson1.results[i].atd = _self.atd;
+				// },
+				success: function (getData) {
+					// for (var i = 0; i < getData.results.length; i++) {
+					// 	var oModelcodetyp = new sap.ui.model.json.JSONModel([]);
+					// 	oModelcodetyp.setData(getData.results);
+					// 	_self.getView().setModel(oModelcodetyp, "codtyp");
+					// }
+					_self.tempjsonport = {
+						results: []
+					};
 
-							_self.custdatefkdt = _self.temjson1.results[i].fkdat;
-							_self.fkdat = _self.ConvertJsonDate(_self.custdatefkdt);
-							_self.temjson1.results[i].fkdat = _self.fkdat;
-
-							_self.custdatefkdtpo_date = _self.temjson1.results[i].po_date;
-							_self.po_date = _self.ConvertJsonDate(_self.custdatefkdtpo_date);
-							_self.temjson1.results[i].po_date = _self.po_date;
-
-						}
-
-						var oModelData = new sap.ui.model.json.JSONModel();
-						oModelData.setData(_self.temjson1);
-						_self.getView().setModel(oModelData, "list1");
-
-					}
+					_self.tempjsonport.results = _self.tempjsonport.results.concat(getData.results);
 					for (var i = 0; i < _self.temjson1.results.length; i++) {
-						if (_self.temjson1.results[i].checked == "true") {
-							var cb = oTable.addSelectionInterval(i, i);
+						for (var a = 0; a < _self.tempjsonport.results.length; a++) {
+							if (_self.tempjsonport.results[a].codtyp == _self.temjson1.results[i].pol) {
+								_self.temjson1.results[i].pol_desc = _self.tempjsonport.results[a].coddesc;
+
+							}
+							if (_self.tempjsonport.results[a].codtyp == _self.temjson1.results[i].pod) {
+								_self.temjson1.results[i].pod_desc = _self.tempjsonport.results[a].coddesc;
+
+							}
 						}
+
+
 					}
+					// _self.tempjson.results = _self.tempjson.results.concat(_self.tempjsonport.results);
+					// _self.getView().getModel("tableLists").setData(_self.tempjson);
+					_self.getView().getModel("list1").refresh();
+
+					// 	var oModelcodetyp = new sap.ui.model.json.JSONModel([]);
+					// 	oModelcodetyp.setData(getData.results);
+					// 	_self.getView().setModel(oModelcodetyp, "codtyp");
 					_self._CloseBusyDialog();
 				},
-
-				error: function (oError) {
-					MessageBox.error("Something Went Wrong . Please Try again Later");
+				error: function (getData) {
+					MessageBox.error("error");
 					_self._CloseBusyDialog();
+
 				}
+
 			});
+
+		},
+		itemgetCountry: function () {
+			debugger;
+			var _self = this;
+			_self._OpenBusyDialog();
+			// var pvalue = "PORT";
+			// var prvaEncode = encodeURIComponent(pvalue);
+			// _self.omodelCodetyp.read("/xBRIxCE_CODTYP(inparam='" + pvalue + "')/Set", {
+			// _self.omdelItem.read("/xBRIxi_open_account_item", {
+			_self.omodelCodetyp.read("/I_Country", {
+				// urlParameters: {
+
+				// 	"$top": "5000"
+
+				// },
+				success: function (getData) {
+					// for (var i = 0; i < getData.results.length; i++) {
+					// 	var oModelcodetyp = new sap.ui.model.json.JSONModel([]);
+					// 	oModelcodetyp.setData(getData.results);
+					// 	_self.getView().setModel(oModelcodetyp, "codtyp");
+					// }
+					_self.tempjsoncountry = {
+						results: []
+					};
+
+					_self.tempjsoncountry.results = _self.tempjsoncountry.results.concat(getData.results);
+					for (var i = 0; i < _self.temjson1.results.length; i++) {
+						for (var a = 0; a < _self.tempjsoncountry.results.length; a++) {
+							if (_self.tempjsoncountry.results[a].Country == _self.temjson1.results[i].orgcntry) {
+								_self.temjson1.results[i].landx = _self.tempjsoncountry.results[a].Country_Text;
+
+							}
+							
+						}
+
+
+					}
+					// _self.tempjson.results = _self.tempjson.results.concat(_self.tempjsoncountry.results);
+					// _self.getView().getModel("tableLists").setData(_self.tempjson);
+					_self.getView().getModel("list1").refresh();
+
+					// 	var oModelcodetyp = new sap.ui.model.json.JSONModel([]);
+					// 	oModelcodetyp.setData(getData.results);
+					// 	_self.getView().setModel(oModelcodetyp, "codtyp");
+					_self._CloseBusyDialog();
+				},
+				error: function (getData) {
+					MessageBox.error("error");
+					_self._CloseBusyDialog();
+
+				}
+
+			});
+
 		},
 		vendorGet: function (oEvent) {
 			var _self = this;
@@ -357,6 +474,28 @@ sap.ui.define([
 							};
 							_self.temjsoninv.results = _self.temjsoninv.results.concat(response.results);
 							_self.temjsoninv.results = _self.temjsoninv.results.filter(a => a.invoicenr == _self.searchinv);
+
+							for (var i = 0; i < _self.temjsoninv.results.length; i++) {
+								_self.custdate = _self.temjsoninv.results[i].custom_boe_date;
+								_self.custom_boe_date = _self.ConvertJsonDate(_self.custdate);
+								_self.temjsoninv.results[i].custom_boe_date = _self.custom_boe_date;
+
+								_self.custdateata = _self.temjsoninv.results[i].ata;
+								_self.ata = _self.ConvertJsonDate(_self.custdateata);
+								_self.temjsoninv.results[i].ata = _self.ata;
+
+								_self.custdateatd = _self.temjsoninv.results[i].atd;
+								_self.atd = _self.ConvertJsonDate(_self.custdateatd);
+								_self.temjsoninv.results[i].atd = _self.atd;
+
+								_self.custdatefkdt = _self.temjsoninv.results[i].fkdat;
+								_self.fkdat = _self.ConvertJsonDate(_self.custdatefkdt);
+								_self.temjsoninv.results[i].fkdat = _self.fkdat;
+
+								_self.custdatefkdtpo_date = _self.temjsoninv.results[i].po_date;
+								_self.po_date = _self.ConvertJsonDate(_self.custdatefkdtpo_date);
+								_self.temjsoninv.results[i].po_date = _self.po_date;
+							}
 							// _self.temjson1.results.splice(_self.getIndex, 0, {
 							// 	// doccat: _self.temjsoninv.results[0].doccat,
 							// 	// iteno: _self.temjsoninv.results[0].iteno,
@@ -548,6 +687,11 @@ sap.ui.define([
 					var TotalAppliedAmount = 0;
 					var TotalinvAmount = 0;
 					var table = oEvent.getSource();
+					for (var b = 0; b < _self.temjson1.results.length; b++) {
+						// if(_self.temjson1.results[b].checked == "false"){
+							_self.temjson1.results[b].checked = "true";
+						// }
+					}
 					if (lengthOfCell >= 1) {
 						for (var b = 0; b < _self.temjson1.results.length; b++) {
 							var totalopamt = _self.temjson1.results[b].openacc_value;
@@ -1120,8 +1264,15 @@ sap.ui.define([
 			for (var i = 0; i < _self.temjson1.results.length; i++) {
 				const object = _self.temjson1.results[i];
 				if (object.checked == "true") {
-					object.amount_payable =  object.amount_payable + ".00";
-					
+					// if (object.amount_payable.includes(".")) {
+					if (Number.isInteger(object.amount_payable)) {
+
+						object.amount_payable = object.amount_payable + ".00";
+					}
+					else {
+
+					}
+
 				}
 			}
 			_self.getView().getModel("list1").setData(_self.temjson1);
@@ -1145,7 +1296,7 @@ sap.ui.define([
 			}
 			for (var i = 0; i < _self.temjson1.results.length; i += 1) {
 				_self.orgdatefkdat = _self.temjson1.results[i].fkdat;
-				if (_self.orgdatefkdat != null) {
+				if ((_self.orgdatefkdat != null) || (_self.orgdatefkdat != undefined)) {
 					if (_self.orgdatefkdat.includes("/")) {
 						var SplitDatePart = _self.orgdatefkdat.split("/");
 						_self.fkdat = SplitDatePart[2] + "-" + SplitDatePart[1] + "-" + SplitDatePart[0] + "T00:00:00";
@@ -1158,7 +1309,7 @@ sap.ui.define([
 				}
 
 				_self.orgdateatd = _self.temjson1.results[i].atd;
-				if (_self.orgdateatd != null) {
+				if ((_self.orgdateatd != null) || (_self.orgdateatd != undefined)) {
 					if (_self.orgdateatd.includes("/")) {
 						var SplitDatePart = _self.orgdateatd.split("/");
 						_self.atd = SplitDatePart[2] + "-" + SplitDatePart[1] + "-" + SplitDatePart[0] + "T00:00:00";
@@ -1171,7 +1322,7 @@ sap.ui.define([
 				}
 
 				_self.orgdateata = _self.temjson1.results[i].ata;
-				if (_self.orgdateata != null) {
+				if ((_self.orgdateata != null) || (_self.orgdateata != undefined)) {
 					if (_self.orgdateata.includes("/")) {
 						var SplitDatePart = _self.orgdateata.split("/");
 						_self.ata = SplitDatePart[2] + "-" + SplitDatePart[1] + "-" + SplitDatePart[0] + "T00:00:00";
@@ -1184,7 +1335,7 @@ sap.ui.define([
 				}
 
 				_self.orgdatepo_date = _self.temjson1.results[i].po_date;
-				if (_self.orgdatepo_date != null) {
+				if ((_self.orgdatepo_date != null) || (_self.orgdatepo_date != undefined)) {
 					if (_self.orgdatepo_date.includes("/")) {
 						var SplitDatePart = _self.orgdatepo_date.split("/");
 						_self.po_date = SplitDatePart[2] + "-" + SplitDatePart[1] + "-" + SplitDatePart[0] + "T00:00:00";
@@ -1197,7 +1348,7 @@ sap.ui.define([
 				}
 
 				_self.orgdate = _self.temjson1.results[i].custom_boe_date;
-				if (_self.orgdate != null) {
+				if ((_self.orgdate != null) || (_self.orgdate != undefined)) {
 					if (_self.orgdate.includes("/")) {
 						var SplitDatePart = _self.orgdate.split("/");
 						_self.custom_boe_date = SplitDatePart[2] + "-" + SplitDatePart[1] + "-" + SplitDatePart[0] + "T00:00:00";

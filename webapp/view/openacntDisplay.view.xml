@@ -192,84 +192,93 @@
 										<t:Column id="bln" tooltip="" width="10em">
 									<Label text="BL/Consignment No/HaWb No"/>
 									<t:template>
-										<Input value="{list1>bl_no}" id="bl_no"  maxLength="35" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+										<Input value="{list1>bl_no}" id="bl_no"  maxLength="35" editable="false"/>
 									</t:template>
 								</t:Column>
 								<t:Column id="date1" tooltip="" width="10em">
 									<Label text="Date"/>
 									<t:template>
+									<!-- <Text text="{ path: 'list1>po_date', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy' } }" id="po_date"
+													enabled="false"/> -->
 										<DatePicker id="po_date" value=" {path: 'list1>po_date'}"
-											valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="OnchangeDatepo" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+											valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="OnchangeDatepo" editable="false"/>
 									</t:template>
 								</t:Column>
 								<t:Column id="at1" tooltip="" width="10em">
 									<Label text="ATA"/>
 									<t:template>
+									<!-- <Text text="{ path: 'list1>ata', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy' } }" id="ata"
+													enabled="false"/> -->
 										<DatePicker id="ata" value=" {path: 'list1>ata'}"
-											 valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="OnchangeDateata" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+											 valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="OnchangeDateata" editable="false"/>
 									</t:template>
 								</t:Column>
 								<t:Column id="ad11" tooltip="" width="10em">
 									<Label text="ATD"/>
 									<t:template>
+									<!-- <Text text="{ path: 'list1>atd', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy' } }" id="atd"
+													enabled="false"/> -->
 										<DatePicker id="atd" value=" {path: 'list1>atd'}"
-											 valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="OnchangeDateatd" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+											 valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="OnchangeDateatd" editable="false"/>
 									</t:template>
 								</t:Column>
 								<t:Column id="a" tooltip="" width="10em">
 									<Label text="Country of Origin"/>
 									<t:template>
-										<Input value="{list1>orgcntry}" id="orgcntry"  maxLength="3" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+										<Input value="{list1>orgcntry}" id="orgcntry"  maxLength="3" editable="false"/>
 									</t:template>
 								</t:Column>
 								<t:Column id="ad1" tooltip="" width="10em">
 									<Label text="Country Description"/>
 									<t:template>
-										<Input value="{list1>landx}" id="landx"  maxLength="15"  editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+										<Input value="{list1>landx}" id="landx"  maxLength="15"  editable="false"/>
 									</t:template>
 								</t:Column>
 										<t:Column id="iamn4" tooltip=" " width="10em">
 											<Label text="Port of Loading"/>
 											<t:template>
-												<Input id="pol" tooltip="" value="{list1>pol}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" maxLength="6"/>
+												<Input id="pol" tooltip="" value="{list1>pol}" editable="false" maxLength="6"/>
 											</t:template>
 										</t:Column>
 										<t:Column id="iamn5" tooltip=" " width="10em">
 											<Label text="Port of Loading Description"/>
 											<t:template>
 
-												<Input id="pol_desc" tooltip="" value="{list1>pol_desc}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" maxLength="35"/>
+												<Input id="pol_desc" tooltip="" value="{list1>pol_desc}" editable="false" maxLength="35"/>
 											</t:template>
 										</t:Column>
 										<t:Column id="iamn6" tooltip=" " width="10em">
 											<Label text="Port of Discharge"/>
 											<t:template>
-												<Input id="pod" tooltip="" value="{list1>pod}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" maxLength="6"/>
+												<Input id="pod" tooltip="" value="{list1>pod}" editable="false" maxLength="6"/>
 											</t:template>
 										</t:Column>
 										<t:Column id="iamn7" tooltip=" " width="10em">
 									<Label text="Port of Discharge Description"/>
 								<t:template>
-										<Input id="pod_desc" tooltip="" value="{list1>pod_desc}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" maxLength="35"/>
+										<Input id="pod_desc" tooltip="" value="{list1>pod_desc}" editable="false" maxLength="35"/>
 								</t:template>
 								</t:Column>
 										<t:Column id="iamn8" tooltip=" " width="10em">
 											<Label text="Plant"/>
 											<t:template>
-												<Input id="plant" tooltip="" value="{list1>plant}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" maxLength="4"/>
+												<Input id="plant" tooltip="" value="{list1>plant}" editable="false" maxLength="4"/>
 											</t:template>
 										</t:Column>
 										<t:Column id="iamng" tooltip=" " width="10em">
 											<Label text="Custom BOE Number"/>
 											<t:template>
-												<Input id="custom_boe_no" tooltip="" value="{list1>custom_boe_no}" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}" maxLength="25"/>
+												<Input id="custom_boe_no" tooltip="" value="{list1>custom_boe_no}" editable="false" maxLength="25"/>
 											</t:template>
 										</t:Column>
 										<t:Column id="iamny" tooltip=" " width="10em">
 											<Label text="Custom BOE Date"/>
 											<t:template>
+											<!-- <Text text="{ path: 'list1>custom_boe_date', type: 'sap.ui.model.type.Date', formatOptions: { pattern: 'dd/MM/yyyy' } }" id="atd"
+													enabled="false"/> -->
+											
 												<DatePicker id="custom_boe_date" value=" {path: 'list1>custom_boe_date',formatter:'LICE.Formatter.convertToJsondate'}"
-													valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="OnchangeDate" editable="{=( ${list1>retirement} !== 'X') &amp;&amp; ( ${State>/enable})}"/>
+													valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="OnchangeDate" editable="false"/>
 												
 											</t:template>
 										</t:Column>

@@ -11,8 +11,11 @@ sap.ui.define([
 			this.router = sap.ui.core.UIComponent.getRouterFor(this);
 			this.router.attachRoutePatternMatched(this._handleRouteMatched, this);
 			this.omodelVendor = this.getOwnerComponent().getModel("Vendor_Model");
+			this.omodelCodetyp = this.getOwnerComponent().getModel("Vendor_Model");
 			this.omdelItem = this.getOwnerComponent().getModel("Item_Model");
-
+			this.tempjson = {
+				results: []
+			};
 		},
 		_handleRouteMatched: function (oEvent) {
 			debugger;
@@ -22,9 +25,14 @@ sap.ui.define([
 			this.getView().byId("idIconTabBar").setVisible(false);
 			this.getView().byId("lebelMode2").setVisible(false);
 			this.Cleardata();
+			this.tempjson = {
+				results: []
+			};
+			var oModelData = new sap.ui.model.json.JSONModel();
+			oModelData.setData(this.tempjson);
+			this.getView().setModel(oModelData, "tableLists");
+			this.getView().getModel("tableLists").refresh();
 
-			// var oTable = this.byId("idItemTtable");
-			// oTable.clearSelection();
 		},
 		Cleardata: function () {
 
@@ -70,7 +78,7 @@ sap.ui.define([
 
 		},
 
-		_handleValueHelpCloseVendor: function (oEvent) {
+		_handleValueHelpCloseVendor: async function (oEvent) {
 			var _self = this;
 			if (oEvent.getParameter("selectedItem")) {
 				_self.oSelectedItemvendor = oEvent.getParameter("selectedItem").getTitle();
@@ -80,15 +88,18 @@ sap.ui.define([
 					var reqNoInputFrom = this.getView().byId(this.inputId);
 					reqNoInputFrom.setValue(_self.oSelectedItemvendor);
 				}
+
+				oEvent.getSource().getBinding("items").filter([]);
 				if (_self.oSelectedItemvendor != "") {
 					_self.getView().byId("idIconTabBar").setVisible(true);
 					_self.getView().byId("idIconTabBa1r").setVisible(true);
 					_self.getView().byId("save").setVisible(true);
 					_self.itemget();
-					_self.AuthConfiguration("Create");
 
+					_self.AuthConfiguration("Create");
+					await _self.itemgetCodetyp();
+					_self.itemgetCountry();
 				}
-				oEvent.getSource().getBinding("items").filter([]);
 			}
 		},
 		handleValueHelpCompany: function (oEvent) {
@@ -260,38 +271,149 @@ sap.ui.define([
 		},
 		itemget: function () {
 			debugger;
-			var _self = this;
-			_self._OpenBusyDialog();
-			_self.omdelItem.read("/xBRIxi_open_account_item", {
-				success: function (oData) {
-					console.log(oData);
-					if (oData.results.length <= 0) {
-						MessageBox.error("No Matching Result(s) Found for the Filter");
-						_self._CloseBusyDialog();
-					} else {
-						_self.tempjson = {
-							results: []
-						};
-						_self.tempjson.results = _self.tempjson.results.concat(oData.results);
-						_self.tempjson.results = _self.tempjson.results.filter(a => a.lifnr == _self.oSelectedItemvendor);
-						_self.tempjson.results = _self.tempjson.results.filter(a => a.consigncod == _self.oSelectedItemCompany);
-						for (var i = 0; i < _self.tempjson.results.length; i++) {
-							_self.tempjson.results[i].custom_boe_date = "";
-						}
-						var oModelData = new sap.ui.model.json.JSONModel();
-						oModelData.setData(_self.tempjson);
-						_self.getView().setModel(oModelData, "tableLists");
+			return new Promise(async (resolve, reject) => {
+				var _self = this;
+				_self._OpenBusyDialog();
+				_self.omdelItem.read("/xBRIxi_open_account_item", {
+					success: function (oData) {
+						console.log(oData);
+						if (oData.results.length <= 0) {
+							MessageBox.error("No Matching Result(s) Found for the Filter");
+							_self._CloseBusyDialog();
+						} else {
+							_self.tempjson = {
+								results: []
+							};
+							_self.tempjson.results = _self.tempjson.results.concat(oData.results);
+							_self.tempjson.results = _self.tempjson.results.filter(a => a.lifnr == _self.oSelectedItemvendor);
+							_self.tempjson.results = _self.tempjson.results.filter(a => a.consigncod == _self.oSelectedItemCompany);
+							for (var i = 0; i < _self.tempjson.results.length; i++) {
+								_self.tempjson.results[i].custom_boe_date = "";
+							}
+							var oModelData = new sap.ui.model.json.JSONModel();
+							oModelData.setData(_self.tempjson);
+							_self.getView().setModel(oModelData, "tableLists");
 
-						var oTable = _self.byId("idItemTtable");
-						oTable.clearSelection();
+							var oTable = _self.byId("idItemTtable");
+							oTable.clearSelection();
+
+						}
+						_self._CloseBusyDialog();
+						resolve();
+					},
+					error: function (error) {
+						MessageBox.error("Something Went Wrong . Please Try again Later");
+						_self._CloseBusyDialog();
+						reject();
+					}
+				});
+			})
+
+		},
+		itemgetCodetyp: function () {
+			debugger;
+			var _self = this;
+			// var pvalue = "PORT";
+			// var prvaEncode = encodeURIComponent(pvalue);
+			// _self.omodelCodetyp.read("/xBRIxCE_CODTYP(inparam='" + pvalue + "')/Set", {
+			// _self.omdelItem.read("/xBRIxi_open_account_item", {
+			_self.omodelCodetyp.read("/xBRIxI_PORT_CODTYP", {
+				// urlParameters: {
+
+				// 	"$top": "5000"
+
+				// },
+				success: function (getData) {
+					// for (var i = 0; i < getData.results.length; i++) {
+					// 	var oModelcodetyp = new sap.ui.model.json.JSONModel([]);
+					// 	oModelcodetyp.setData(getData.results);
+					// 	_self.getView().setModel(oModelcodetyp, "codtyp");
+					// }
+					_self.tempjsonport = {
+						results: []
+					};
+
+					_self.tempjsonport.results = _self.tempjsonport.results.concat(getData.results);
+					for (var i = 0; i < _self.tempjson.results.length; i++) {
+						for (var a = 0; a < _self.tempjsonport.results.length; a++) {
+							if (_self.tempjsonport.results[a].codtyp == _self.tempjson.results[i].pol) {
+								_self.tempjson.results[i].pol_desc = _self.tempjsonport.results[a].coddesc;
+
+							}
+							if (_self.tempjsonport.results[a].codtyp == _self.temjson1.results[i].pod) {
+								_self.temjson1.results[i].pod_desc = _self.tempjsonport.results[a].coddesc;
+
+							}
+						}
+
 
 					}
+					// _self.tempjson.results = _self.tempjson.results.concat(_self.tempjsonport.results);
+					// _self.getView().getModel("tableLists").setData(_self.tempjson);
+					_self.getView().getModel("tableLists").refresh();
+
+					// 	var oModelcodetyp = new sap.ui.model.json.JSONModel([]);
+					// 	oModelcodetyp.setData(getData.results);
+					// 	_self.getView().setModel(oModelcodetyp, "codtyp");
+				},
+				error: function (getData) {
+					MessageBox.error("error");
+
+				}
+
+			});
+		},
+		itemgetCountry: function () {
+			debugger;
+			var _self = this;
+			_self._OpenBusyDialog();
+			// var pvalue = "PORT";
+			// var prvaEncode = encodeURIComponent(pvalue);
+			// _self.omodelCodetyp.read("/xBRIxCE_CODTYP(inparam='" + pvalue + "')/Set", {
+			// _self.omdelItem.read("/xBRIxi_open_account_item", {
+			_self.omodelCodetyp.read("/I_Country", {
+				// urlParameters: {
+
+				// 	"$top": "5000"
+
+				// },
+				success: function (getData) {
+					// for (var i = 0; i < getData.results.length; i++) {
+					// 	var oModelcodetyp = new sap.ui.model.json.JSONModel([]);
+					// 	oModelcodetyp.setData(getData.results);
+					// 	_self.getView().setModel(oModelcodetyp, "codtyp");
+					// }
+					_self.tempjsoncountry = {
+						results: []
+					};
+
+					_self.tempjsoncountry.results = _self.tempjsoncountry.results.concat(getData.results);
+					for (var i = 0; i < _self.temjson1.results.length; i++) {
+						for (var a = 0; a < _self.tempjsoncountry.results.length; a++) {
+							if (_self.tempjsoncountry.results[a].Country == _self.temjson1.results[i].orgcntry) {
+								_self.temjson1.results[i].landx = _self.tempjsoncountry.results[a].Country_Text;
+
+							}
+							
+						}
+
+
+					}
+					// _self.tempjson.results = _self.tempjson.results.concat(_self.tempjsoncountry.results);
+					// _self.getView().getModel("tableLists").setData(_self.tempjson);
+					_self.getView().getModel("list1").refresh();
+
+					// 	var oModelcodetyp = new sap.ui.model.json.JSONModel([]);
+					// 	oModelcodetyp.setData(getData.results);
+					// 	_self.getView().setModel(oModelcodetyp, "codtyp");
 					_self._CloseBusyDialog();
 				},
-				error: function (error) {
-					MessageBox.error("Something Went Wrong . Please Try again Later");
+				error: function (getData) {
+					MessageBox.error("error");
 					_self._CloseBusyDialog();
+
 				}
+
 			});
 
 		},
@@ -391,10 +513,10 @@ sap.ui.define([
 					_self.getView().byId("totamtpaid").setValue("0");
 					_self.getView().byId("balance").setValue("0");
 				}
-				const object = _self.tempjson.results[0].openacc_curr;
+				var object1 = _self.tempjson.results[0].openacc_curr;
 				for (var b = 0; b < _self.tempjson.results.length; b++) {
 
-					if (object == _self.tempjson.results[b].openacc_curr) {
+					if (object1 == _self.tempjson.results[b].openacc_curr) {
 
 						const object = _self.tempjson.results[i];
 						object.bank_exc_rate = _self.getView().byId("bank_exc_rate").getValue();
@@ -913,7 +1035,11 @@ sap.ui.define([
 			for (var i = 0; i < _self.tempjson.results.length; i++) {
 				const object = _self.tempjson.results[i];
 				if (object.checked == "true") {
+
 					object.amount_payable = object.amount_payable + ".00";
+
+					// if (object.bank_exc_rate.includes(".")) {
+
 
 				}
 			}
