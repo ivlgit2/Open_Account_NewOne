@@ -388,20 +388,22 @@ sap.ui.define([
 					};
 
 					_self.tempjsoncountry.results = _self.tempjsoncountry.results.concat(getData.results);
-					for (var i = 0; i < _self.temjson1.results.length; i++) {
-						for (var a = 0; a < _self.tempjsoncountry.results.length; a++) {
-							if (_self.tempjsoncountry.results[a].Country == _self.temjson1.results[i].orgcntry) {
-								_self.temjson1.results[i].landx = _self.tempjsoncountry.results[a].Country_Text;
+					if (_self.temjson1 != undefined) {
+						for (var i = 0; i < _self.temjson1.results.length; i++) {
+							for (var a = 0; a < _self.tempjsoncountry.results.length; a++) {
+								if (_self.tempjsoncountry.results[a].Country == _self.temjson1.results[i].orgcntry) {
+									_self.temjson1.results[i].landx = _self.tempjsoncountry.results[a].Country_Text;
+
+								}
 
 							}
-							
+
 						}
-
-
+						_self.getView().getModel("list1").refresh();
 					}
 					// _self.tempjson.results = _self.tempjson.results.concat(_self.tempjsoncountry.results);
 					// _self.getView().getModel("tableLists").setData(_self.tempjson);
-					_self.getView().getModel("list1").refresh();
+					
 
 					// 	var oModelcodetyp = new sap.ui.model.json.JSONModel([]);
 					// 	oModelcodetyp.setData(getData.results);

@@ -35,7 +35,7 @@
 										<Text text="{nndoHeaderDetail>/compdes}" id="compdes"></Text>
 										<Label text="Vendor"/>
 										<!--<Input value="" enabled="false" id="vendor" width="223px" liveChange="intcheck"/>-->
-										<Input id="lifnr" type="Text" textFormatMode="Key" showSuggestion="true" value="{Lists>/lifnr}" showValueHelp="true"
+										<Input id="lifnr" valueHelpOnly="true" type="Text" textFormatMode="Key" showSuggestion="true" value="{Lists>/lifnr}" showValueHelp="true"
 											valueHelpRequest="handleValueHelpVendor" suggestionItemSelected="suggestionItemSelected" enabled="false" valueLiveUpdate="true"></Input>
 											<Label text=""/>
 										<Text text="{nndoHeaderDetail>/vendordes}" id="vendordes"></Text>
@@ -51,11 +51,11 @@
 										<DatePicker id="due_date" enabled="{State>/enable}" value=" {path: 'Lists>/due_date'}" dateValue="{/date}" valueFormat="yyyy-MM-ddT00:00:00"
 											displayFormat="dd/MM/yyyy" change="ChangeSchmeIssue"/>
 										<Label text="Importer Bank"/>
-										<Input id="imp_bank" enabled="{State>/enable}" value="{Lists>/imp_bank}" type="Text" textFormatMode="Key" showSuggestion="true"
+										<Input id="imp_bank" valueHelpOnly="true" enabled="{State>/enable}" value="{Lists>/imp_bank}" type="Text" textFormatMode="Key" showSuggestion="true"
 											showValueHelp="true" valueHelpRequest="handleValueHelpImpBank" suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true"></Input>
 										<core:Title/>
 										<Label text="Beneficiary Bank"/>
-										<Input id="banka" type="Text" enabled="{State>/enable}" textFormatMode="Key" showSuggestion="true" showValueHelp="true"
+										<Input id="banka" type="Text" valueHelpOnly="true" enabled="{State>/enable}" textFormatMode="Key" showSuggestion="true" showValueHelp="true"
 											valueHelpRequest="handleValueHelpBnfBank" value="{Lists>/banka}" suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true"></Input>
 										<Label text="Account.No"/>
 										<Input value="{Lists>/accno}" enabled="{State>/enable}" id="accno"  liveChange="Numbercheck2" maxLength="25"/>
@@ -90,11 +90,11 @@
 										<Input value="{Lists>/swift}" id="swift" enabled="false" />
 										<Label text="Incoterm"/>
 										<!--<Input value="{Lists>/vendor}" id="incotrm"  enabled="{State>/enable}" width="223px"/>-->
-										<Input id="inco1" type="Text" enabled="{State>/enable}" textFormatMode="Key" showSuggestion="true" showValueHelp="true"
+										<Input id="inco1" type="Text" valueHelpOnly="true" enabled="{State>/enable}" textFormatMode="Key" showSuggestion="true" showValueHelp="true"
 											valueHelpRequest="handleValueHelpincotrm" value="{Lists>/inco1}" suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true"></Input>
 										<Label text="Payment Terms"/>
 										<!--<Input value="{Lists>/vendor}" id="paymnterms"  enabled="{State>/enable}" width="223px"/>-->
-										<Input id="zterm" type="Text" value="{Lists>/zterm}" enabled="{State>/enable}" textFormatMode="Key" showSuggestion="true"
+										<Input id="zterm" type="Text" valueHelpOnly="true" value="{Lists>/zterm}" enabled="{State>/enable}" textFormatMode="Key" showSuggestion="true"
 											showValueHelp="true" valueHelpRequest="handleValueHelpPaymnttrm" suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true"></Input>
 										<Label text="Purchase Org"/>
 										<Input value="{Lists>/ekorg}" id="ekorg" liveChange="Numbercheck5" maxLength="4" enabled="{State>/enable}" />
@@ -231,7 +231,7 @@
 								<t:Column id="ad1" tooltip="" width="10em">
 									<Label text="Country Description"/>
 									<t:template>
-										<Input value="{list1>landx}" id="landx"  maxLength="15"  editable="false"/>
+										<Input value="{list1>landx}" id="landx"    editable="false"/>
 									</t:template>
 								</t:Column>
 										<t:Column id="iamn4" tooltip=" " width="10em">
@@ -244,7 +244,7 @@
 											<Label text="Port of Loading Description"/>
 											<t:template>
 
-												<Input id="pol_desc" tooltip="" value="{list1>pol_desc}" editable="false" maxLength="35"/>
+												<Input id="pol_desc" tooltip="" value="{list1>pol_desc}" editable="false" />
 											</t:template>
 										</t:Column>
 										<t:Column id="iamn6" tooltip=" " width="10em">
@@ -256,7 +256,7 @@
 										<t:Column id="iamn7" tooltip=" " width="10em">
 									<Label text="Port of Discharge Description"/>
 								<t:template>
-										<Input id="pod_desc" tooltip="" value="{list1>pod_desc}" editable="false" maxLength="35"/>
+										<Input id="pod_desc" tooltip="" value="{list1>pod_desc}" editable="false" />
 								</t:template>
 								</t:Column>
 										<t:Column id="iamn8" tooltip=" " width="10em">

@@ -19,7 +19,7 @@
 						</VBox>
 						<VBox id="lebelMode2" visible="false" class="sapMFlexItemAlignAuto">
 							<Label text="Vendor" id="mode" class="sapMLabelTextWrapper" width="10rem"/>
-							<Input id="lifnr1" type="Text" textFormatMode="Key" showSuggestion="true" showValueHelp="true" valueHelpRequest="handleValueHelpVendor"
+							<Input id="lifnr1" valueHelpOnly="true" type="Text" textFormatMode="Key" showSuggestion="true" showValueHelp="true" valueHelpRequest="handleValueHelpVendor"
 								suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true"></Input>
 						</VBox>
 					</items>
@@ -55,12 +55,12 @@
 									valueFormat="yyyy-MM-ddT00:00:00" displayFormat="dd/MM/yyyy" change="ChangeSchmeIssue" enabled="{State>/enable}"/>
 								<Label text="Importer Bank"/>
 								<!--<Input value="{lcCreateHDRModel>/vendor}" id="Importerbank" enabled="true" width="223px"/>-->
-								<Input id="imp_bank"  type="Text" textFormatMode="Key" showSuggestion="true" showValueHelp="true" valueHelpRequest="handleValueHelpImpBank"
+								<Input id="imp_bank" valueHelpOnly="true" type="Text" textFormatMode="Key" showSuggestion="true" showValueHelp="true" valueHelpRequest="handleValueHelpImpBank"
 									suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true"></Input>
 								<core:Title/>
 								<Label text="Beneficiary Bank"/>
 								<!--<Input value="{lcCreateHDRModel>/vendor}" id="beneficiarybank" enabled="true" width="220px"/>-->
-								<Input id="banka" type="Text" textFormatMode="Key" showSuggestion="true" showValueHelp="true" valueHelpRequest="handleValueHelpBnfBank"
+								<Input id="banka" valueHelpOnly="true" type="Text" textFormatMode="Key" showSuggestion="true" showValueHelp="true" valueHelpRequest="handleValueHelpBnfBank"
 									suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true" ></Input>
 								<Label text="Account.No"/>
 								<Input value="{lcCreateHDRModel>/accno}" id="accno" enabled="true" maxLength="25" />
@@ -95,11 +95,11 @@
 								<Input value="{lcCreateHDRModel>/swift}" id="swift" enabled="false" />
 								<Label text="Incoterm"/>
 								<!--<Input value="{lcCreateHDRModel>/inco1}" id="inco1" enabled="true" width="223px"/>-->
-								<Input id="inco1" type="Text" textFormatMode="Key" showSuggestion="true" showValueHelp="true" valueHelpRequest="handleValueHelpincotrm"
+								<Input id="inco1" type="Text" valueHelpOnly="true" textFormatMode="Key" showSuggestion="true" showValueHelp="true" valueHelpRequest="handleValueHelpincotrm"
 									suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true"></Input>
 								<Label text="Payment Terms"/>
 								<!--<Input value="{lcCreateHDRModel>/vendor}" id="paymnterms" enabled="true" width="223px"/>-->
-								<Input id="zterm" type="Text" textFormatMode="Key" showSuggestion="true" showValueHelp="true" valueHelpRequest="handleValueHelpPaymnttrm"
+								<Input id="zterm" valueHelpOnly="true" type="Text" textFormatMode="Key" showSuggestion="true" showValueHelp="true" valueHelpRequest="handleValueHelpPaymnttrm"
 									suggestionItemSelected="suggestionItemSelected" valueLiveUpdate="true"></Input>
 								<Label text="Purchase Org"/>
 								<Input value="{lcCreateHDRModel>/ekorg}" id="ekorg"  maxLength="4" />
@@ -232,7 +232,7 @@
 								<t:Column id="ad1" tooltip="" width="10em">
 									<Label text="Country Description"/>
 									<t:template>
-										<Input value="{tableLists>landx}" id="landx" maxLength="15" enabled="false" />
+										<Input value="{tableLists>landx}" id="landx"  enabled="false" />
 									</t:template>
 								</t:Column>
 								
@@ -245,7 +245,7 @@
 								<t:Column id="iamn5" tooltip=" " width="10em">
 									<Label text="Port of Loading Description"/>
 									<t:template>
-										<Input id="pol_desc" tooltip="" value="{tableLists>pol_desc}" enabled="false" maxLength="35"/>
+										<Input id="pol_desc" tooltip="" value="{tableLists>pol_desc}" enabled="false" />
 									</t:template>
 								</t:Column>
 								<t:Column id="iamn6" tooltip=" " width="10em">
@@ -257,7 +257,7 @@
 								<t:Column id="iamn7" tooltip=" " width="10em">
 									<Label text="Port of Discharge Description"/>
 								<t:template>
-										<Input id="pod_desc" tooltip="" value="{tableLists>pod_desc}" enabled="false" maxLength="35"/>
+										<Input id="pod_desc" tooltip="" value="{tableLists>pod_desc}" enabled="false" />
 								</t:template>
 								</t:Column>
 								<t:Column id="iamn8" tooltip=" " width="10em">
