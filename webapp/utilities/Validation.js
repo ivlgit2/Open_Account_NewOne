@@ -2,7 +2,7 @@
 
 jQuery.sap.declare("LICE.Formatter");
 LICE.Formatter = {
-		ConvertJsonDate: function (value) {
+	ConvertJsonDate: function (value) {
 		var output = "";
 		if (value) {
 			if (value instanceof Date) {
@@ -20,33 +20,72 @@ LICE.Formatter = {
 		return output;
 
 	},
-		convertToSAPdate:function(value){
-			//alert(value);
-	
-				if(value){
-				if(value instanceof Date){
-					var NewDateform =value;	
-				}else if(value.indexOf("T00:00:00")>=0){
-					return value;
-				}else{
-				////	var year = value.substring(0, 4);
-				//	var month = value.substring(4, 6);
-				//	var day = value.substring(0, 2);
-				}
-				var mnth = ("0" + (NewDateform.getMonth()+1)).slice(-2);
-				var day  = ("0" + NewDateform.getDate()).slice(-2);
-				var output= [NewDateform.getFullYear(),mnth,day].join("-")+"T00:00:00";	
-				return output;
-				}
-		}, 
-			FormatDate: function (val) {
-			var spl, rev;
-			if (val) {
-				spl = (val).split("/");
-				rev = spl.reverse();
-				val = rev.join("-") + "T00:00:00";
-			}
-			return val;
+	// convertToSAPdate: function (value) {
+	// 	//alert(value);
+
+	// 	if (value) {
+	// 		if (value instanceof Date) {
+	// 			var NewDateform = value;
+	// 		} else if (value.indexOf("T00:00:00") >= 0) {
+	// 			return value;
+	// 		} else {
+	// 			////	var year = value.substring(0, 4);
+	// 			//	var month = value.substring(4, 6);
+	// 			//	var day = value.substring(0, 2);
+	// 		}
+	// 		var mnth = ("0" + (NewDateform.getMonth() + 1)).slice(-2);
+	// 		var day = ("0" + NewDateform.getDate()).slice(-2);
+	// 		var output = [NewDateform.getFullYear(), mnth, day].join("-") + "T00:00:00";
+	// 		return output;
+	// 	}
+	// },
+	FormatDate: function (val) {
+		var spl, rev;
+		if (val) {
+			spl = (val).split("/");
+			rev = spl.reverse();
+			val = rev.join("-") + "T00:00:00";
 		}
+		return val;
+	},
+	setRequired: function (value) {
+		if (value === "true" || value === "True" || value === "TRUE") {
+			return true;
+		} else if (value === "false") {
+			return false;
+		} else if (value === true) {
+			return true;
+		} else if (value === false) {
+			return false;
+		} else {
+			return false;
+		}
+	},
+	setVisible: function (value) {
+		if (value === "true" || value === "True" || value === "TRUE") {
+			return true;
+		} else if (value === "false") {
+			return false;
+		} else if (value === true) {
+			return true;
+		} else if (value === false) {
+			return false;
+		} else {
+			return true;
+		}
+	},
+	setEditable: function (value) {
+		if (value === "true" || value === "True" || value === "TRUE") {
+			return true;
+		} else if (value === "false") {
+			return false;
+		} else if (value === true) {
+			return true;
+		} else if (value === false) {
+			return false;
+		} else {
+			return true;
+		}
+	},
 };
 

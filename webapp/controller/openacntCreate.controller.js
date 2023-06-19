@@ -33,6 +33,21 @@ sap.ui.define([
 			this.getView().setModel(oModelData, "tableLists");
 			this.getView().getModel("tableLists").refresh();
 
+			this.xBRIxI_EDSGENHD_A1TypeData = {};
+			var xBRIxI_EDSGENHD_A1Type_Model = new sap.ui.model.json.JSONModel([]);
+			xBRIxI_EDSGENHD_A1Type_Model.setData(this.xBRIxI_EDSGENHD_A1TypeData.results);
+			this.getView().setModel(xBRIxI_EDSGENHD_A1Type_Model, "xBRIxI_EDSGENHD_A1Type_Model");
+
+			this.xBRIxI_EDSGENHD_A2TypeData = {};
+			var xBRIxI_EDSGENHD_A2Type_Model = new sap.ui.model.json.JSONModel([]);
+			xBRIxI_EDSGENHD_A2Type_Model.setData(this.xBRIxI_EDSGENHD_A2TypeData);
+			this.getView().setModel(xBRIxI_EDSGENHD_A2Type_Model, "xBRIxI_EDSGENHD_A2Type_Model");
+
+			this.visibleData = {};
+			var visible_Model = new sap.ui.model.json.JSONModel([]);
+			visible_Model.setData(this.visibleData);
+			this.getView().setModel(visible_Model, "visible_Model");
+
 		},
 		Cleardata: function () {
 
@@ -44,7 +59,7 @@ sap.ui.define([
 			this.getView().byId("banka").setValue(null);
 			this.getView().byId("accno").setValue(null);
 			this.getView().byId("bankn").setValue(null);
-			this.getView().byId("bank_exc_rate").setValue(null);
+			this.getView().byId("bank_exc_rate1").setValue(null);
 			this.getView().byId("totinvval").setValue(null);
 			this.getView().byId("totamtpaid").setValue(null);
 			this.getView().byId("balance").setValue(null);
@@ -94,11 +109,14 @@ sap.ui.define([
 					_self.getView().byId("idIconTabBar").setVisible(true);
 					_self.getView().byId("idIconTabBa1r").setVisible(true);
 					_self.getView().byId("save").setVisible(true);
-					_self.itemget();
-
+					
 					_self.AuthConfiguration("Create");
-					await _self.itemgetCodetyp();
+					// await _self.itemgetCodetyp();
+					await _self.itemget();
+					_self.itemgetCodetyp();
 					_self.itemgetCountry();
+					
+
 				}
 			}
 		},
@@ -288,7 +306,30 @@ sap.ui.define([
 							_self.tempjson.results = _self.tempjson.results.filter(a => a.lifnr == _self.oSelectedItemvendor);
 							_self.tempjson.results = _self.tempjson.results.filter(a => a.consigncod == _self.oSelectedItemCompany);
 							for (var i = 0; i < _self.tempjson.results.length; i++) {
-								_self.tempjson.results[i].custom_boe_date = "";
+
+								_self.custdate = _self.tempjson.results[i].custom_boe_date;
+								_self.custom_boe_date = _self.ConvertJsonDate(_self.custdate);
+								_self.tempjson.results[i].custom_boe_date = _self.custom_boe_date;
+
+								_self.custdateata = _self.tempjson.results[i].ata;
+								_self.ata = _self.ConvertJsonDate(_self.custdateata);
+								_self.tempjson.results[i].ata = _self.ata;
+
+								_self.custdateatd = _self.tempjson.results[i].atd;
+								_self.atd = _self.ConvertJsonDate(_self.custdateatd);
+								_self.tempjson.results[i].atd = _self.atd;
+
+								// _self.custdatefkdt = _self.temjson1.results[i].fkdat;
+								// _self.fkdat = _self.ConvertJsonDate(_self.custdatefkdt);
+								// _self.temjson1.results[i].fkdat = _self.fkdat;
+
+								_self.custdatefkdtpo_date = _self.tempjson.results[i].po_date;
+								_self.po_date = _self.ConvertJsonDate(_self.custdatefkdtpo_date);
+								_self.tempjson.results[i].po_date = _self.po_date;
+
+								_self.tempjson.results[i].fkdat = "";
+								_self.tempjson.results[i].db_amt = "";
+
 							}
 							var oModelData = new sap.ui.model.json.JSONModel();
 							oModelData.setData(_self.tempjson);
@@ -306,13 +347,33 @@ sap.ui.define([
 						_self._CloseBusyDialog();
 						reject();
 					}
+					
 				});
+				
 			})
 
+		},
+		ConvertJsonDate: function (value) {
+			output = "";
+			if (value) {
+				if (value instanceof Date) {
+					var NewDateform = value;
+				} else if (value.indexOf("T00:00:00")) {
+					var NewDateform = new Date(value.substring(0, 10));
+				} else {
+					var formattedJsonDate = eval('new' + value.replace(/\//g, ' '));
+					var NewDateform = new Date(formattedJsonDate);
+				}
+				var mnth = ("0" + (NewDateform.getMonth() + 1)).slice(-2);
+				var day = ("0" + NewDateform.getDate()).slice(-2);
+				var output = [day, mnth, NewDateform.getFullYear()].join("/");
+			}
+			return output;
 		},
 		itemgetCodetyp: function () {
 			debugger;
 			var _self = this;
+			_self._OpenBusyDialog();
 			// var pvalue = "PORT";
 			// var prvaEncode = encodeURIComponent(pvalue);
 			// _self.omodelCodetyp.read("/xBRIxCE_CODTYP(inparam='" + pvalue + "')/Set", {
@@ -335,13 +396,14 @@ sap.ui.define([
 
 					_self.tempjsonport.results = _self.tempjsonport.results.concat(getData.results);
 					for (var i = 0; i < _self.tempjson.results.length; i++) {
+
 						for (var a = 0; a < _self.tempjsonport.results.length; a++) {
 							if (_self.tempjsonport.results[a].codtyp == _self.tempjson.results[i].pol) {
 								_self.tempjson.results[i].pol_desc = _self.tempjsonport.results[a].coddesc;
 
 							}
-							if (_self.tempjsonport.results[a].codtyp == _self.temjson1.results[i].pod) {
-								_self.temjson1.results[i].pod_desc = _self.tempjsonport.results[a].coddesc;
+							if (_self.tempjsonport.results[a].codtyp == _self.tempjson.results[i].pod) {
+								_self.tempjson.results[i].pod_desc = _self.tempjsonport.results[a].coddesc;
 
 							}
 						}
@@ -351,13 +413,14 @@ sap.ui.define([
 					// _self.tempjson.results = _self.tempjson.results.concat(_self.tempjsonport.results);
 					// _self.getView().getModel("tableLists").setData(_self.tempjson);
 					_self.getView().getModel("tableLists").refresh();
-
+					_self._OpenBusyDialog();
 					// 	var oModelcodetyp = new sap.ui.model.json.JSONModel([]);
 					// 	oModelcodetyp.setData(getData.results);
 					// 	_self.getView().setModel(oModelcodetyp, "codtyp");
 				},
 				error: function (getData) {
 					MessageBox.error("error");
+					_self._OpenBusyDialog();
 
 				}
 
@@ -403,7 +466,7 @@ sap.ui.define([
 					}
 					// _self.tempjson.results = _self.tempjson.results.concat(_self.tempjsoncountry.results);
 					// _self.getView().getModel("tableLists").setData(_self.tempjson);
-					
+
 
 					// 	var oModelcodetyp = new sap.ui.model.json.JSONModel([]);
 					// 	oModelcodetyp.setData(getData.results);
@@ -521,7 +584,7 @@ sap.ui.define([
 					if (object1 == _self.tempjson.results[b].openacc_curr) {
 
 						const object = _self.tempjson.results[i];
-						object.bank_exc_rate = _self.getView().byId("bank_exc_rate").getValue();
+						object.bank_exc_rate = _self.getView().byId("bank_exc_rate1").getValue();
 						// if (object.bank_exc_rate.includes(".")) {
 						// 	for (var i = 0; i < this.tempjson.results.length; i++) {
 						// 		this.bank = this.tempjson.results[i].bank_exc_rate;
@@ -561,7 +624,7 @@ sap.ui.define([
 				// _self.getView().byId("bank_ex").setValue("0");
 				// _self.getView().byId("amount_inr").setValue("0");
 				for (var i = 0; i < _self.tempjson.results.length; i++) {
-					// this.getView().byId("bank_exc_rate").setValue(0);
+					// this.getView().byId("bank_exc_rate1").setValue(0);
 					for (var i = 0; i < _self.tempjson.results.length; i++) {
 						const object = _self.tempjson.results[i];
 						// if (object.amount_payable != undefined) {
@@ -651,7 +714,7 @@ sap.ui.define([
 								}
 							}
 							else {
-								object.bank_exc_rate = _self.getView().byId("bank_exc_rate").getValue();
+								object.bank_exc_rate = _self.getView().byId("bank_exc_rate1").getValue();
 								// if (object.bank_exc_rate.includes(".")) {
 								// 	for (var i = 0; i < this.tempjson.results.length; i++) {
 								// 		this.bank = this.tempjson.results[i].bank_exc_rate;
@@ -799,7 +862,7 @@ sap.ui.define([
 							for (var i = 0; i < _self.tempjson.results.length; i++) {
 								const object = _self.tempjson.results[i];
 								if (object.checked == "true") {
-									object.bank_exc_rate = _self.getView().byId("bank_exc_rate").getValue();
+									object.bank_exc_rate = _self.getView().byId("bank_exc_rate1").getValue();
 									// if (object.bank_exc_rate.includes(".")) {
 									// 	for (var i = 0; i < this.tempjson.results.length; i++) {
 									// 		this.bank = this.tempjson.results[i].bank_exc_rate;
@@ -935,7 +998,7 @@ sap.ui.define([
 				banka: this.getView().byId("banka").getValue(),
 				accno: this.getView().byId("accno").getValue(),
 				bankn: this.getView().byId("bankn").getValue(),
-				bank_exc_rate: this.getView().byId("bank_exc_rate").getValue(),
+				bank_exc_rate: this.getView().byId("bank_exc_rate1").getValue(),
 				ad_code: this.getView().byId("ad_code").getValue(),
 				swift: this.getView().byId("swift").getValue(),
 				inco1: this.getView().byId("inco1").getValue(),
@@ -948,44 +1011,44 @@ sap.ui.define([
 				totamtpaid_curr: this.getView().byId("totamtpaid_curr").getValue(),
 				totinvval_curr: this.getView().byId("totinvval_curr").getValue()
 			};
-			if ((_self.oEntry.og_docdt == "") || (_self.oEntry.og_docdt == null)) {
-				MessageBox.error("Please Fill Original Doc Refdate ");
-				_self._CloseBusyDialog();
-				return;
-			}
-			if ((_self.oEntry.pay_date == "") || (_self.oEntry.pay_date == null)) {
-				MessageBox.error("Please Fill Payment Date");
-				_self._CloseBusyDialog();
-				return;
-			}
-			if ((_self.oEntry.due_date == "") || (_self.oEntry.due_date == null)) {
-				MessageBox.error("Please Fill Due Date");
-				_self._CloseBusyDialog();
-				return;
-			}
-			if ((_self.oEntry.imp_bank == "") || (_self.oEntry.imp_bank == null)) {
-				MessageBox.error("Please Fill Importer Bank");
-				_self._CloseBusyDialog();
-				return;
-			}
-			if ((_self.oEntry.bank_exc_rate == "") || (_self.oEntry.bank_exc_rate == null)) {
-				MessageBox.error("Please Fill Bank Excange Rate");
-				_self._CloseBusyDialog();
-				return;
-			}
+			// if ((_self.oEntry.og_docdt == "") || (_self.oEntry.og_docdt == null)) {
+			// 	MessageBox.error("Please Fill Original Doc Refdate ");
+			// 	_self._CloseBusyDialog();
+			// 	return;
+			// }
+			// if ((_self.oEntry.pay_date == "") || (_self.oEntry.pay_date == null)) {
+			// 	MessageBox.error("Please Fill Payment Date");
+			// 	_self._CloseBusyDialog();
+			// 	return;
+			// }
+			// if ((_self.oEntry.due_date == "") || (_self.oEntry.due_date == null)) {
+			// 	MessageBox.error("Please Fill Due Date");
+			// 	_self._CloseBusyDialog();
+			// 	return;
+			// }
+			// if ((_self.oEntry.imp_bank == "") || (_self.oEntry.imp_bank == null)) {
+			// 	MessageBox.error("Please Fill Importer Bank");
+			// 	_self._CloseBusyDialog();
+			// 	return;
+			// }
+			// if ((_self.oEntry.bank_exc_rate == "") || (_self.oEntry.bank_exc_rate == null)) {
+			// 	MessageBox.error("Please Fill Bank Excange Rate");
+			// 	_self._CloseBusyDialog();
+			// 	return;
+			// }
 
 
 			// if (_self.oEntry.pay_date == '') {		````````````````````````````````````````````````````````````````````````````````````````````````
 
 			// 	_self.oEntry.pay_date = null;
 			// }
-			// if (_self.oEntry.og_docdt == '') {
+			// if ((_self.oEntry.ata == '') || (_self.oEntry.ata == "")) {
 
-			// 	_self.oEntry.og_docdt = null;
+			// 	_self.oEntry.ata = null;
 			// }
-			// if (_self.oEntry.due_date == '') {
+			// if ((_self.oEntry.atd == '') || (_self.oEntry.atd == "")) {
 
-			// 	_self.oEntry.due_date = null;
+			// 	_self.oEntry.atd = null;
 			// }
 			// if (_self.oEntry.bank_exc_rate == '') {
 
@@ -1010,17 +1073,97 @@ sap.ui.define([
 						return;
 						// _self.tempjson.results[i].amount_payable="0.00";
 					}
-
+					if (_self.tempjson.results[i].fkdat == "") {
+						MessageBox.error("Please Fill Debit Date");
+						_self._CloseBusyDialog();
+						return;
+					}
+					if(_self.tempjson.results[i].db_amt == "") {
+						MessageBox.error("Please Fill Debit Amount");
+						_self._CloseBusyDialog();
+						return;
+					}
 					if (_self.tempjson.results[i].custom_boe_date == "") {
 						_self.tempjson.results[i].custom_boe_date = null;
 					}
 					if (_self.tempjson.results[i].bank_charges == "") {
 						_self.tempjson.results[i].bank_charges = '0.000';
 					}
+					if ((_self.tempjson.results[i].ata == '') || (_self.tempjson.results[i].ata == "")) {
+
+						_self.tempjson.results[i].ata = null;
+					}
+					if ((_self.tempjson.results[i].atd == '') || (_self.tempjson.results[i].atd == "")) {
+
+						_self.tempjson.results[i].atd = null;
+					}
 					if (_self.tempjson.results[i].db_amt == "") {
 						_self.tempjson.results[i].db_amt = '0.000';
 					}
-
+					_self.orgdatefkdat = _self.tempjson.results[i].fkdat;
+					if ((_self.orgdatefkdat != null) || (_self.orgdatefkdat != undefined)) {
+						if (_self.orgdatefkdat.includes("/")) {
+							var SplitDatePart = _self.orgdatefkdat.split("/");
+							_self.fkdat = SplitDatePart[2] + "-" + SplitDatePart[1] + "-" + SplitDatePart[0] + "T00:00:00";
+							// _self.fkdat = _self.ConvertJsonDate(_self.orgdatefkdat);
+							_self.tempjson.results[i].fkdat = _self.fkdat;
+						} else {
+							_self.fkdat = _self.convertToSAPdate(_self.orgdatefkdat);
+							_self.tempjson.results[i].fkdat = _self.fkdat;
+						}
+					}
+	
+					_self.orgdateatd = _self.tempjson.results[i].atd;
+					if ((_self.orgdateatd != null) || (_self.orgdateatd != undefined)) {
+						if (_self.orgdateatd.includes("/")) {
+							var SplitDatePart = _self.orgdateatd.split("/");
+							_self.atd = SplitDatePart[2] + "-" + SplitDatePart[1] + "-" + SplitDatePart[0] + "T00:00:00";
+							// _self.atd = _self.ConvertJsonDate(_self.orgdateatd);
+							_self.tempjson.results[i].atd = _self.atd;
+						} else {
+							_self.atd = _self.convertToSAPdate(_self.orgdateatd);
+							_self.tempjson.results[i].atd = _self.atd;
+						}
+					}
+	
+					_self.orgdateata = _self.tempjson.results[i].ata;
+					if ((_self.orgdateata != null) || (_self.orgdateata != undefined)) {
+						if (_self.orgdateata.includes("/")) {
+							var SplitDatePart = _self.orgdateata.split("/");
+							_self.ata = SplitDatePart[2] + "-" + SplitDatePart[1] + "-" + SplitDatePart[0] + "T00:00:00";
+							// _self.ata = _self.ConvertJsonDate(_self.orgdateata);
+							_self.tempjson.results[i].ata = _self.ata;
+						} else {
+							_self.ata = _self.convertToSAPdate(_self.orgdateata);
+							_self.tempjson.results[i].ata = _self.ata;
+						}
+					}
+	
+					_self.orgdatepo_date = _self.tempjson.results[i].po_date;
+					if ((_self.orgdatepo_date != null) || (_self.orgdatepo_date != undefined)) {
+						if (_self.orgdatepo_date.includes("/")) {
+							var SplitDatePart = _self.orgdatepo_date.split("/");
+							_self.po_date = SplitDatePart[2] + "-" + SplitDatePart[1] + "-" + SplitDatePart[0] + "T00:00:00";
+							// _self.po_date = _self.ConvertJsonDate(_self.orgdatepo_date);
+							_self.tempjson.results[i].po_date = _self.po_date;
+						} else {
+							_self.po_date = _self.convertToSAPdate(_self.orgdatepo_date);
+							_self.tempjson.results[i].po_date = _self.po_date;
+						}
+					}
+	
+					_self.orgdate = _self.tempjson.results[i].custom_boe_date;
+					if ((_self.orgdate != null) || (_self.orgdate != undefined)) {
+						if (_self.orgdate.includes("/")) {
+							var SplitDatePart = _self.orgdate.split("/");
+							_self.custom_boe_date = SplitDatePart[2] + "-" + SplitDatePart[1] + "-" + SplitDatePart[0] + "T00:00:00";
+							// _self.custom_boe_date = _self.ConvertJsonDate(_self.orgdate);
+							_self.tempjson.results[i].custom_boe_date = _self.custom_boe_date;
+						} else {
+							_self.custom_boe_date = _self.convertToSAPdate(_self.orgdate);
+							_self.tempjson.results[i].custom_boe_date = _self.custom_boe_date;
+						}
+					}
 
 				}
 			}
@@ -1113,6 +1256,7 @@ sap.ui.define([
 			//***********************************item create*******************************//
 
 		},
+
 		onpresscreate: async function (oEvent) {
 			debugger;
 
@@ -1123,19 +1267,22 @@ sap.ui.define([
 			var Check_Status = _self.CheckRequiredFields("Create");
 			if (Check_Status) {
 
-				// if (this.tempjson == undefined) {
-				// 	_self.onPressSave();
-				// } else if (this.tempjson.results.length > 0) {
-				// 	for (var i = 0; i < this.tempjson.results.length; i++) {
-				// 		Check_StatusInvItm = this.CheckItemRequired(JSON.parse(JSON.stringify(this.tempjson.results[i])));
-				// 		if (!Check_StatusInvItm)
-				// 			break;
-				// 	}
-				// } else {
-				// 	Check_StatusInvItm = true;
-				// }
+				if (this.tempjson == undefined) {
+					_self.onPressSave();
+				} else if (this.tempjson.results.length > 0) {
+					for (var i = 0; i < this.tempjson.results.length; i++) {
+						Check_StatusInvItm = this.CheckItemRequired(JSON.parse(JSON.stringify(this.tempjson.results[i])));
+						// if (!Check_StatusInvItm)
+						// 	break;
+						if (Check_StatusInvItm == true) {
+							break;
+						}
+					}
+				} else {
+					Check_StatusInvItm = true;
+				}
 
-				Check_StatusInvItm = true;
+				// Check_StatusInvItm = true;
 				if (Check_StatusInvItm) {
 					if (_self.Msg != "" && _self.NotValid === true) {
 						MessageBox.warning(_self.Msg + " is not filled,Would you like to continue?", {
@@ -1157,75 +1304,79 @@ sap.ui.define([
 			}
 		},
 		CheckRequiredFields: function (Type) {
+
 			var ErrorMsg = "";
 			var WarningMsg = "";
 			var arra = this.RequiredFileds;
 			this.NotValid = false;
 			var MsgType = "";
 			for (var i = 0; i < this.RequiredFileds.length; i++) {
-				if (this.getView().byId(this.RequiredFileds[i]).getValue() == "") {
 
+				if (this.RequiredFiledsDropDwn[i] == "true") {
+					var value = this.getView().byId(this.RequiredFileds[i]).getSelectedKey();
+				} else {
+					var value = this.getView().byId(this.RequiredFileds[i]).getValue();
+				}
+				if (value == "") {
 					if (this.RequiredFiledsErrorSts[i] == "E") {
 						MsgType = "Error";
 						this.NotValid = true;
-						ErrorMsg = ErrorMsg + this.RequiredFiledsDesc[i] + ",";
+						ErrorMsg = ErrorMsg + this.RequiredFiledsDesc[i] + ","
 					} else {
 						this.NotValid = true;
-						WarningMsg = WarningMsg + this.RequiredFiledsDesc[i] + ",";
+						WarningMsg = WarningMsg + this.RequiredFiledsDesc[i] + ","
 					}
 				}
 			}
 			if (MsgType == "Error") {
 				this.Msg = ErrorMsg.substring(0, ErrorMsg.length - 1);
 				MessageBox.error("Please fill " + this.Msg);
-				return false;
 				this._CloseBusyDialog();
+				return false;
 			} else {
 				this.Msg = WarningMsg.substring(0, WarningMsg.length - 1);
 				this._CloseBusyDialog();
 			}
 			return true;
 		},
-		CheckItemRequired: function (arr) {
-			// delete arr.to_compliance;
-			// delete arr.__metadata;
+		CheckItemRequired: function (arr, Type) {
 			var ErrorMsg = "";
 			var WarningMsg = "";
-			var arra = this.RequiredFileds;
-			// var arr = this.ItemMand;
+			var arra = this.ItemMand;
 			this.NotValid = false;
 			var MsgType = "";
+
 			for (var i = 0; i < this.ItemMand.length; i++) {
-				var field = this.ItemMand[i];
 				if (arr.hasOwnProperty(this.ItemMand[i])) {
-					// for (var j = 0; j < this.tempjson.results.length; i++) {
-					// this.tempjson.results
-					// if (this.tempjson.results[j].article_desc == "" || this.tempjson.results[j].article_no == "" || this.tempjson.results[j].article_no == "") {
-					// 	if (arr[this.ItemMand[i]] == "" || arr[this.ItemMand[i]] == null) {
+					// if (this.ItemMand[i] == "invoicenrItm") {
+					// 	this.ItemMand[i] = "invoicenr";
+					// }
 					if (arr[this.ItemMand[i]] == "" || arr[this.ItemMand[i]] == null) {
+
 						if (this.ItemFiledsErrorSts[i] == "E") {
 							MsgType = "Error";
 							this.NotValid = true;
-							ErrorMsg = ErrorMsg + this.ItemFiledsDesc[i] + ",";
-							//this.Msg = ErrorMsg.substring(0, msg.length - 1);
+							ErrorMsg = ErrorMsg + this.ItemFiledsDesc[i] + ","
 						} else {
 							this.NotValid = true;
-							WarningMsg = WarningMsg + this.ItemFiledsDesc[i] + ",";
+							WarningMsg = WarningMsg + this.ItemFiledsDesc[i] + ","
 						}
-						// }
 					}
 				}
+
 			}
 			if (MsgType == "Error") {
 				this.Msg = ErrorMsg.substring(0, ErrorMsg.length - 1);
 				MessageBox.error("Please fill " + this.Msg);
+				this._CloseBusyDialog();
 				return false;
 			} else {
 				this.Msg = WarningMsg.substring(0, WarningMsg.length - 1);
+				this._CloseBusyDialog();
+
 			}
 			return true;
 		},
-
 		AuthConfiguration: function (Type) {
 			debugger;
 			// return new Promise(async (resolve, reject) => {
@@ -1249,9 +1400,12 @@ sap.ui.define([
 			filters.push(filterval);
 			var filterval = new sap.ui.model.Filter("status", sap.ui.model.FilterOperator.EQ, stat);
 			filters.push(filterval);
+			var filterval = new sap.ui.model.Filter("actvt", sap.ui.model.FilterOperator.EQ, "01");
+			filters.push(filterval);
 			this.RequiredFileds = new Array();
 			this.RequiredFiledsDesc = new Array();
 			this.RequiredFiledsErrorSts = new Array();
+			this.RequiredFiledsDropDwn = new Array();
 			this.ItemMand = new Array();
 			this.ItemFiledsDesc = new Array();
 			this.ItemFiledsErrorSts = new Array();
@@ -1277,15 +1431,15 @@ sap.ui.define([
 									}
 								} else {
 									if (_self.getView().byId(arr[i].fldnam)) {
-										_self.getView().byId(arr[i].fldnam).setVisible((arr[i].visible == "true") ? true : false);
-										_self.getView().byId(arr[i].fldnam).setRequired((arr[i].required == "true") ? true : false);
+										// _self.getView().byId(arr[i].fldnam).setVisible((arr[i].visible == "true") ? true : false);
+										// _self.getView().byId(arr[i].fldnam).setRequired((arr[i].required == "true") ? true : false);
 										if (arr[i].required == "true") {
-											if (arr[i].entityset.match("xBRIxopen_account_hdr")) {
+											if (arr[i].entityset.match("xBRIxopen_account_ITEM")) {
 												_self.ItemMand.push(arr[i].fldnam);
 												_self.ItemFiledsDesc.push(arr[i].flddescr);
 												_self.ItemFiledsErrorSts.push(arr[i].errstat);
 
-											} else if (arr[i].entityset.match("xBRIxopen_account_ITEM")) {
+											} else if (arr[i].entityset.match("xBRIxopen_account_hdr")) {
 												_self.RequiredFileds.push(arr[i].fldnam);
 												_self.RequiredFiledsDesc.push(arr[i].flddescr);
 												_self.RequiredFiledsErrorSts.push(arr[i].errstat);
@@ -1298,17 +1452,41 @@ sap.ui.define([
 									}
 								}
 					}
+					eval();
+					// _self.mandatoryList.results = getData.results.filter(a => a.required == "true");
+					getData.results.map(function (value) {
+						eval("_self.xBRIxI_EDSGENHD_A2TypeData." + value.fldnam + "_required=" + value.required);
+						eval("_self.visibleData." + value.fldnam + "_visible=" + value.visible);
+						// eval("_self.xBRIxI_EDSGENHD_A1TypeData." + value.fldnam + "_visible=" + value.visible);
+						eval("_self.xBRIxI_EDSGENHD_A1TypeData." + value.fldnam + "_editable=" + value.editable);
+						eval("_self.xBRIxI_EDSGENHD_A1TypeData." + value.fldnam + "_enable=" + value.enable);
+					});
+					// var Visible_Model = new sap.ui.model.json.JSONModel({
+					// 	Visible: true
+					// });
+					// this.getView().setModel(Visible_Model, "Visible_Model");
+					_self._modelSetRefresh("visible_Model", _self.visibleData);
+					_self._modelSetRefresh("xBRIxI_EDSGENHD_A1Type_Model", _self.xBRIxI_EDSGENHD_A1TypeData);
+					_self._modelSetRefresh("xBRIxI_EDSGENHD_A2Type_Model", _self.xBRIxI_EDSGENHD_A2TypeData);
+
 					// resolve();
 				},
 				error: function (error) {
 					MessageBox.error("Something Went Wrong . Please Try again Later");
 					// reject();
 				}
+				// resolve();
+
+
 			});
 			/*console.log(this.RequiredFileds);
 			console.log(this.RequiredFiledsDesc);
 			console.log(this.ItemMand);*/
 			// })
+		},
+		_modelSetRefresh: function (modelName, modelData) {
+			this.getView().getModel(modelName).setData(modelData);
+			this.getView().getModel(modelName).refresh();
 		},
 		DecCheck1: function (oEvent) {
 			debugger;
@@ -1489,15 +1667,29 @@ sap.ui.define([
 				return;
 			}
 			else if (value) {
-				if (value instanceof Date) {
-					var NewDateform = value;
-				} else if (value.indexOf("T00:00:00")) {
-					var NewDateform = new Date(value.substring(0, 10));
-				}
+				var NewDateform = this.convertToSAPdate(value);
+				// if (value instanceof Date) {
+				// 	var NewDateform = value;
+				// } else if (value.indexOf("T00:00:00")) {
+				// 	var NewDateform = new Date(value.substring(0, 10));
+				// }
 				this.tempjson.results[currentRow].fkdat = NewDateform;
 				this.getView().getModel("tableLists").refresh();
 			}
 
+		},
+		convertToSAPdate: function (value) { //alert(value);
+			if (value) {
+				if (value instanceof Date) {
+					var NewDateform = value;
+				} else if (value.indexOf("T00:00:00")) {
+					return value;
+				} else { }
+				var mnth = ("0" + (NewDateform.getMonth() + 1)).slice(-2);
+				var day = ("0" + NewDateform.getDate()).slice(-2);
+				var output = [NewDateform.getFullYear(), mnth, day].join("-") + "T00:00:00";
+				return output;
+			}
 		},
 		OnchangeDatepo: function (oEvent) {
 			debugger;
@@ -1635,7 +1827,7 @@ sap.ui.define([
 			var val2 = isNaN(val);
 			if ((val2) == true) {
 				MessageBox.error("Only accept Numbers");
-				this.getView().byId("bank_exc_rate").setValue("");
+				this.getView().byId("bank_exc_rate1").setValue("");
 			}
 			if (val != "") {
 				var val = parseFloat(val);
@@ -1643,7 +1835,7 @@ sap.ui.define([
 				if (roundedNumber != val) {
 					MessageBox.error("Error: Number should have at most two decimal places.");
 					// var msg = "Error: Number should have at most four decimal places.";
-					this.getView().byId("bank_exc_rate").setValue("");
+					this.getView().byId("bank_exc_rate1").setValue("");
 					for (var i = 0; i < this.tempjson.results.length; i++) {
 						const object = this.tempjson.results[i];
 						if (object.checked == "true") {
@@ -1659,7 +1851,7 @@ sap.ui.define([
 							// 	object.bank_exc_rate = this.bank1;
 
 							// }
-							object.amount_inr = this.getView().byId("bank_exc_rate").getValue() * object.amount_payable;
+							object.amount_inr = this.getView().byId("bank_exc_rate1").getValue() * object.amount_payable;
 						}
 					}
 					this.getView().getModel("tableLists").setData(this.tempjson);
