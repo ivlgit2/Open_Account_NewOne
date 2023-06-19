@@ -44,7 +44,7 @@
 					<t:Table selectionMode="None" visible="false" visibleRowCount="6" id="trackTable" rows="{tableLists>/results}">
 						<t:columns>
 							<t:Column>
-								<Label text="Int Track No"/>
+								<Label text="Internal Track No"/>
 								<t:template>
 									<Link text="{tableLists>intno}" press="handleLinkPress"/>
 								</t:template>
