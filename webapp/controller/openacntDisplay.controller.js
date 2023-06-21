@@ -671,20 +671,29 @@ sap.ui.define([
 
 		OnchangeDatedbt: function (oEvent) {
 			debugger;
+			// var currentRow = oEvent.getSource().getParent().getIndex();
+			// var val = oEvent.getSource().getValue();
+			// if ((val == "") || (val == " ")) {
+			// 	// if (val == " ") {
+			// 	MessageBox.error("Cant make Debit date filed as null");
+			// 	return;
+			// }
+			// else {
+			// 	var SplitDatePar = val.split("-");
+			// 	var SplitDatePar1 = SplitDatePar[2].slice(0, -9);
+			// 	this.temjson1.results[currentRow].fkdat = SplitDatePar[0] + "-" + SplitDatePar[1] + "-" + SplitDatePar1 + "T00:00:00";
+			// 	this.getView().getModel("list1").refresh();
+				
+			// }
 			var currentRow = oEvent.getSource().getParent().getIndex();
 			var val = oEvent.getSource().getValue();
-			if ((val == "") || (val == " ")) {
-				// if (val == " ") {
-				MessageBox.error("Cant make Debit date filed as null");
-				return;
+			if ((val == "") || (val == '')) {
+				this.temjson1.results[currentRow].fkdat = null;
+			} else {
+				this.temjson1.results[currentRow].fkdat = val;
 			}
-			else {
-				var SplitDatePar = val.split("-");
-				var SplitDatePar1 = SplitDatePar[2].slice(0, -9);
-				this.temjson1.results[currentRow].fkdat = SplitDatePar[0] + "-" + SplitDatePar[1] + "-" + SplitDatePar1 + "T00:00:00";
-				this.getView().getModel("list1").refresh();
-				// this.temjson1.results[currentRow].custom_boe_date = null;
-			}
+
+			this.getView().getModel("list1").refresh();
 
 		},
 
@@ -1317,6 +1326,9 @@ sap.ui.define([
 						// _self.temjson1.results[i].amount_payable="0.00";
 					}
 
+				}
+				if (_self.temjson1.results[i].db_amt == "") {
+					_self.temjson1.results[i].db_amt = '0.00';
 				}
 			}
 			for (var i = 0; i < _self.temjson1.results.length; i += 1) {
@@ -2478,11 +2490,11 @@ sap.ui.define([
 			var val = oEvent.mParameters.newValue;
 
 
-			if ((val == "") || (val == " ")) {
-				// if (val == " ") {
-				MessageBox.error("Cant make Debit Amount filed as null");
-				return;
-			}
+			// if ((val == "") || (val == " ")) {
+			// 	// if (val == " ") {
+			// 	MessageBox.error("Cant make Debit Amount filed as null");
+			// 	return;
+			// }
 
 			var val2 = isNaN(val);
 			if ((val2) == true) {

@@ -1074,14 +1074,16 @@ sap.ui.define([
 						// _self.tempjson.results[i].amount_payable="0.00";
 					}
 					if (_self.tempjson.results[i].fkdat == "") {
-						MessageBox.error("Please Fill Debit Date");
-						_self._CloseBusyDialog();
-						return;
+						// MessageBox.error("Please Fill Debit Date");
+						// _self._CloseBusyDialog();
+						// return;
+						_self.tempjson.results[i].fkdat = null;
 					}
-					if(_self.tempjson.results[i].db_amt == "") {
-						MessageBox.error("Please Fill Debit Amount");
-						_self._CloseBusyDialog();
-						return;
+					if((_self.tempjson.results[i].db_amt == "") || (_self.tempjson.results[i].db_amt == "")) {
+						_self.tempjson.results[i].db_amt = "0.00";
+						// MessageBox.error("Please Fill Debit Amount");
+						// _self._CloseBusyDialog();
+						// return;
 					}
 					if (_self.tempjson.results[i].custom_boe_date == "") {
 						_self.tempjson.results[i].custom_boe_date = null;
@@ -1098,7 +1100,7 @@ sap.ui.define([
 						_self.tempjson.results[i].atd = null;
 					}
 					if (_self.tempjson.results[i].db_amt == "") {
-						_self.tempjson.results[i].db_amt = '0.000';
+						_self.tempjson.results[i].db_amt = '0.00';
 					}
 					_self.orgdatefkdat = _self.tempjson.results[i].fkdat;
 					if ((_self.orgdatefkdat != null) || (_self.orgdatefkdat != undefined)) {
@@ -1658,24 +1660,33 @@ sap.ui.define([
 		},
 		OnchangeDatedebit: function (oEvent) {
 			debugger;
-			// var output = "";
-			var value = oEvent.getSource().getValue();
+			
 			var currentRow = oEvent.getSource().getParent().getIndex();
-			if ((value == "") || (value == " ")) {
-				// if (val == " ") {
-				MessageBox.error("Cant make Debit Note Date filed as null");
-				return;
+			var val = oEvent.getSource().getValue();
+			if ((val == "") || (val == '')) {
+				this.tempjson.results[currentRow].fkdat = null;
+			} else {
+				this.tempjson.results[currentRow].fkdat = val;
 			}
-			else if (value) {
-				var NewDateform = this.convertToSAPdate(value);
-				// if (value instanceof Date) {
-				// 	var NewDateform = value;
-				// } else if (value.indexOf("T00:00:00")) {
-				// 	var NewDateform = new Date(value.substring(0, 10));
-				// }
-				this.tempjson.results[currentRow].fkdat = NewDateform;
-				this.getView().getModel("tableLists").refresh();
-			}
+
+			this.getView().getModel("tableLists").refresh();
+			// var value = oEvent.getSource().getValue();
+			// var currentRow = oEvent.getSource().getParent().getIndex();
+			// if ((value == "") || (value == " ")) {
+			// 	// if (val == " ") {
+			// 	MessageBox.error("Cant make Debit Note Date filed as null");
+			// 	return;
+			// }
+			// else if (value) {
+			// 	var NewDateform = this.convertToSAPdate(value);
+			// 	// if (value instanceof Date) {
+			// 	// 	var NewDateform = value;
+			// 	// } else if (value.indexOf("T00:00:00")) {
+			// 	// 	var NewDateform = new Date(value.substring(0, 10));
+			// 	// }
+			// 	this.tempjson.results[currentRow].fkdat = NewDateform;
+			// 	this.getView().getModel("tableLists").refresh();
+			// }
 
 		},
 		convertToSAPdate: function (value) { //alert(value);
